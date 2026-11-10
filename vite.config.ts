@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// GitHub Pages serves the app from https://dmkb-7005.github.io/xpence/
+// GitHub Pages serves the app from https://dmkb-7005.github.io/xpence-v2/
 export default defineConfig({
-  base: '/xpence/',
+  base: '/xpence-v2/',
   plugins: [
     react(),
     VitePWA({
