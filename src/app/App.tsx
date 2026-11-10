@@ -6,12 +6,14 @@ import { BudgetsPage } from '../features/budgets/BudgetsPage';
 import { IncomePage } from '../features/income/IncomePage';
 import { IncomeFormPage } from '../features/income/IncomeFormPage';
 import { SetupPage } from '../features/setup/SetupPage';
+import { SnackbarProvider } from '../components/Snackbar';
 import { UpdateBanner } from './UpdateBanner';
 
 // HashRouter: GitHub Pages has no SPA fallback, and the PWA shortcut uses ./#/expenses/new
 export function App() {
   return (
     <HashRouter>
+      <SnackbarProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/expenses" element={<ExpensesPage />} />
@@ -25,6 +27,7 @@ export function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <UpdateBanner />
+      </SnackbarProvider>
     </HashRouter>
   );
 }

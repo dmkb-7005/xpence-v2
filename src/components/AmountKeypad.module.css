@@ -1,0 +1,41 @@
+.keypad { touch-action: manipulation; }
+.displayRow { display: flex; gap: 8px; align-items: stretch; margin-bottom: 10px; }
+.display {
+  flex: 1;
+  min-width: 0;
+  min-height: 64px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--card);
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.placeholder { color: var(--muted); }
+.result { font-size: 1rem; font-weight: 500; color: var(--muted); }
+.clear {
+  width: 64px;
+  font-size: 1.4rem;
+  color: #fff;
+  background: var(--danger);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.key {
+  min-height: 56px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  background: var(--card);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.key:active { background: #e3efe6; }
+.operator { background: #e8f3ea; }

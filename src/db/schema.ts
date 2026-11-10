@@ -56,7 +56,7 @@ export interface MetaRow {
   value: unknown;
 }
 
-export const SCHEMA_VERSION = 1;
+export { SCHEMA_VERSION } from './version';
 
 export class XpenceDB extends Dexie {
   expenseTypes!: EntityTable<ExpenseType, 'id'>;

@@ -1,0 +1,64 @@
+.page { max-width: 640px; margin: 0 auto; padding: 0 16px 32px; }
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  background: var(--bg);
+}
+.bar > * { flex: 1; }
+.save, .cancel {
+  padding: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.save { color: #fff; background: var(--green); }
+.save:disabled { color: #fff; background: #a9c9af; box-shadow: none; }
+.cancel { color: var(--muted); background: var(--card); }
+.field { margin: 0 0 18px; }
+.label { display: block; margin: 0 0 6px; color: var(--muted); font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.input, .select, .textarea {
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid #cfd6dd;
+  border-radius: 6px;
+}
+.textarea { min-height: 84px; resize: vertical; }
+.row { display: flex; gap: 12px; align-items: flex-end; }
+.row > :first-child { flex: 1; }
+.repeat { display: flex; gap: 8px; align-items: center; }
+.repeat input[type='number'] { width: 80px; }
+.check { width: 24px; height: 24px; }
+.colors { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.chip[aria-pressed='true'] { border-color: var(--text); font-weight: 700; }
+.hint { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; }
+.error { margin: 0 0 12px; color: var(--danger); font-size: 0.9rem; }
+.delete {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--danger);
+  background: var(--card);
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+}

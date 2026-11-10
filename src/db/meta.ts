@@ -1,5 +1,5 @@
 import type { XpenceDB } from './schema';
-import { SCHEMA_VERSION } from './schema';
+import { SCHEMA_VERSION } from './version';
 
 export const DEFAULT_SETTINGS = {
   /** months of history for the "usual" range: 3, 6 or 12 */

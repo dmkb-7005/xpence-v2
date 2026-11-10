@@ -1,0 +1,26 @@
+.snackbar {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 616px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  color: #fff;
+  background: #323a42;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.action {
+  padding: 6px 10px;
+  color: #b8f0c4;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: none;
+  border: 0;
+}
