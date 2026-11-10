@@ -45,3 +45,27 @@ export const TagIcon = ({ size = 20, ...r }: P) => (
 export const CheckIcon = ({ size = 18, ...r }: P) => <svg {...base(size, { strokeWidth: 3, ...r })}><path d="M5 12l5 5 9-10" /></svg>;
 export const SlashIcon = ({ size = 16, ...r }: P) => <svg {...base(size, r)}><path d="M5 19L19 5" /></svg>;
 export const CloseIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M6 6l12 12M18 6L6 18" /></svg>;
+export const HomeIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M4 11l8-7 8 7v9H4z" /><path d="M10 20v-5h4v5" /></svg>;
+export const ListIcon = ({ size = 20, ...r }: P) => (
+  <svg {...base(size, r)}><path d="M8 6h12M8 12h12M8 18h12" /><circle cx="4" cy="6" r=".6" /><circle cx="4" cy="12" r=".6" /><circle cx="4" cy="18" r=".6" /></svg>
+);
+export const PieIcon = ({ size = 20, ...r }: P) => (
+  <svg {...base(size, r)}><path d="M12 3a9 9 0 1 0 9 9h-9z" /><path d="M15 3.5A9 9 0 0 1 20.5 9H15z" /></svg>
+);
+export const ArrowUpIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M12 19V5M6 11l6-6 6 6" /></svg>;
+export const ArrowDownIcon = ({ size = 14, ...r }: P) => <svg {...base(size, { strokeWidth: 2.4, ...r })}><path d="M12 5v14M6 13l6 6 6-6" /></svg>;
+export const GearIcon = ({ size = 20, ...r }: P) => (
+  <svg {...base(size, r)}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>
+);
+export const PlusIcon = ({ size = 22, ...r }: P) => <svg {...base(size, { strokeWidth: 2.4, ...r })}><path d="M12 5v14M5 12h14" /></svg>;
+export const ChevronRight = ({ size = 14, ...r }: P) => <svg {...base(size, r)}><path d="M9 6l6 6-6 6" /></svg>;
+export const CloudCheckIcon = ({ size = 16, ...r }: P) => (
+  <svg {...base(size, r)}><path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 8z" /><path d="M10 14l2 2 3-3" /></svg>
+);
+export const WarnIcon = ({ size = 14, ...r }: P) => (
+  <svg {...base(size, { strokeWidth: 2.2, ...r })}><path d="M12 3l9.5 17h-19z" /><path d="M12 10v4M12 17v.5" /></svg>
+);
+export const InfoIcon = ({ size = 15, ...r }: P) => <svg {...base(size, r)}><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8v.5" /></svg>;
+export const RestoreIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></svg>;
+export const FilterIcon = ({ size = 20, ...r }: P) => <svg {...base(size, { strokeWidth: 2.2, ...r })}><path d="M4 6h16M7 12h10M10 18h4" /></svg>;
+export const SearchIcon = ({ size = 18, ...r }: P) => <svg {...base(size, r)}><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>;

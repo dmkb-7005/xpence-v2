@@ -51,3 +51,14 @@ Same screen titled "Edit expense", prefilled. Differences:
 ## Not wanted
 
 Remark autocomplete, receipt photos, currency choice.
+
+## Status: designed and implemented
+
+Canvas **"Xpence V2 – Add expense"** is the reference for this screen and for the app's visual system (see `00-overview.md`). Decisions it made that other screens rely on:
+
+- Amount card on top; tapping it shows/hides the keypad. Adding starts with the keypad open, editing with it hidden and the details shown.
+- Keypad: operator column on the left, digits on the right, backspace bottom right; hold backspace to clear.
+- Type: top 7 types by usage as chips, "All 16" opens a bottom sheet with every type and its usage count.
+- Date, Repeat, Remark, Group and Colour are compact chips while the keypad is open; hiding the keypad shows the full Remark field, Group dropdown and colour swatches.
+- Repeat: stepper −/+ and a sentence describing the result ("Creates 4 expenses, monthly from … to …").
+- Save button text adapts: *Save expense*, *Save refund*, *Save 4 expenses*, *Save changes*.

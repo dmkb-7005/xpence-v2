@@ -44,3 +44,11 @@ See which types drive this month (and the neighbouring months) above or below us
 - A past focal month (all complete).
 - Not enough history for usual values (show actuals only).
 - Empty.
+
+## Notes after the add-expense design
+
+- Follow "Established visual system" in `00-overview.md`.
+- "Above usual" uses the **red** state colour with an arrow/label; types close to the upper bound in the running month may use **amber** ("trending over"). Normal values stay in `text`; usual values in `muted`.
+- Negative actuals (refund-heavy months) use the green refund style.
+- Scheduled amounts in future months use the *Scheduled* style.
+- Month switching: pill buttons or chips consistent with the add-expense chips; the focal month highlighted with accent.

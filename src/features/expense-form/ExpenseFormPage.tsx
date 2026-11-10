@@ -162,7 +162,11 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
           nowIso,
         );
         await db.expenses.bulkAdd(rows);
-        snackbar.show({ message: rows.length > 1 ? `Saved ${rows.length} expenses` : negative ? 'Refund saved' : 'Expense saved' });
+        snackbar.show({
+          message: rows.length > 1 ? `Saved ${rows.length} expenses` : negative ? 'Refund saved' : 'Expense saved',
+          actionLabel: 'View',
+          onAction: () => { window.location.hash = '#/expenses'; },
+        });
         navigate('/', { replace: true });
       }
     } catch (e) {

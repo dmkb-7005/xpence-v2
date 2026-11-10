@@ -47,3 +47,13 @@ A **sticky footer** with the total:
 ## Not wanted
 
 Charts, swipe-to-delete (deleting is done in the edit screen with undo).
+
+## Notes after the add-expense design
+
+- Follow "Established visual system" in `00-overview.md`.
+- **Highlight colour on a dark row:** propose one treatment and use it everywhere (for example a 4 px left stripe or a dot before the amount; avoid full-row tints that hurt contrast). Palette: `#D9606A`, `#E6C860`, `#DD86CF`, `#8A8CF2`, `#4FBF92`.
+- Scheduled rows reuse the *Scheduled* badge (clock) and `text-2` amount; refund rows reuse the green refund style.
+- Filters: chips (selected = accent fill) with long lists (types, groups) in the bottom sheet, like "All 16" on the add screen.
+- Selection mode: selected rows marked with accent (check or outline); the sticky total footer sits where the primary button sits on forms.
+- Undo snackbar after a delete appears above the footer.
+- The list belongs to the main navigation defined on Home.

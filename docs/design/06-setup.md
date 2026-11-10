@@ -40,3 +40,12 @@ Setup mixes rarely used management lists with an important safety function (back
 - Restore flow: file valid (counts + confirm), file invalid (errors).
 - Backup overdue / never.
 - Persistent storage not granted.
+
+## Notes after the add-expense design
+
+- Follow "Established visual system" in `00-overview.md`.
+- Colour list shows the dark-theme palette (`#D9606A`, `#E6C860`, `#DD86CF`, `#8A8CF2`, `#4FBF92`); the edit control picks a swatch or a hex value. These are the user's starting colours and he will adjust them here.
+- Add/rename uses a bottom sheet with one text field and the primary pill button.
+- Hidden items: dimmed (`faint`) with a "Hidden" badge in the badge style.
+- Backup overdue: amber; never backed up: red. Restore confirmation is destructive: red-outlined or red primary button with explicit text ("Replace all data").
+- Usual window setting (3, 6, 12 months): three chips, like the type chips.

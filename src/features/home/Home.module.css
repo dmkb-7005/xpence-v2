@@ -1,0 +1,109 @@
+.screen { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 56px; padding: 24px 16px 0; flex: none; }
+.date { font-size: 16px; font-weight: 600; }
+.backup {
+  display: flex; align-items: center; gap: 6px; padding: 4px 0;
+  color: var(--muted); font-size: 12px; text-decoration: none; white-space: nowrap;
+}
+.backupWarn, .backupDanger { height: 28px; padding: 0 10px; border-radius: 14px; font-weight: 600; }
+.backupWarn { color: var(--warn); background: var(--warn-bg); border: 1px solid rgba(242, 179, 75, 0.35); }
+.backupDanger { color: var(--danger); background: var(--danger-badge-bg); border: 1px solid var(--danger-border); }
+
+.hero { display: block; margin: 22px 16px 0; color: var(--text); text-decoration: none; flex: none; }
+.heroLabel { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: 13px; }
+.heroAmount {
+  font-family: var(--font-num); font-size: 48px; font-weight: 700; line-height: 56px;
+  letter-spacing: -1.5px; font-variant-numeric: tabular-nums;
+}
+.heroOver { color: var(--danger); }
+.scheduled { display: flex; align-items: center; gap: 6px; margin-top: 2px; color: var(--text-2); font-size: 13px; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+.card {
+  margin: 10px 16px 0; padding: 16px; flex: none;
+  background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+.cardFirst { margin-top: 20px; }
+.cardAlert { border-color: var(--danger-border); }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px 0 8px;
+  font-size: 13px; font-weight: 600; border-radius: 14px; white-space: nowrap;
+}
+.badgeOk { color: var(--accent); background: var(--info-bg); }
+.badgeWarn { color: var(--warn); background: var(--warn-bg); }
+.badgeOver { color: var(--danger); background: var(--danger-badge-bg); }
+.badgeBelow { color: var(--positive); background: var(--positive-bg); }
+.badgeWithin { color: var(--text-2); background: var(--surface-2); }
+.badgeMuted { color: var(--text-2); background: var(--surface-2); }
+
+.projRow { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; }
+.label { color: var(--muted); font-size: 13px; }
+.projValue { font-family: var(--font-num); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.note { margin: 12px 0 0; color: var(--text-2); font-size: 13px; line-height: 18px; }
+
+/* range bar */
+.bar { position: relative; height: 28px; margin-top: 14px; }
+.track { position: absolute; left: 0; right: 0; top: 12px; height: 4px; border-radius: 2px; background: var(--border); }
+.band {
+  position: absolute; top: 6px; height: 16px; border-radius: 8px;
+  background: rgba(61, 155, 255, 0.16); border: 1px solid rgba(61, 155, 255, 0.45);
+}
+.bandMuted { background: rgba(61, 155, 255, 0.12); border-color: rgba(180, 188, 202, 0.45); }
+.medianTick { position: absolute; top: 6px; width: 2px; height: 16px; background: var(--text-2); transform: translateX(-1px); }
+.spentLine { position: absolute; left: 0; top: 12px; height: 4px; border-radius: 2px; background: var(--c); }
+.projLine { position: absolute; top: 13px; height: 0; border-top: 2px dashed var(--c); }
+.spentDot {
+  position: absolute; top: 8px; width: 12px; height: 12px; border-radius: 6px; transform: translateX(-6px);
+  background: var(--c); box-shadow: 0 0 0 3px var(--bg);
+}
+.projDot {
+  position: absolute; top: 7px; width: 14px; height: 14px; border-radius: 7px; transform: translateX(-7px);
+  background: var(--bg); border: 2px solid var(--c);
+}
+.arrow { position: absolute; right: -4px; top: 6px; color: var(--c); }
+.ticks { position: relative; height: 16px; color: var(--muted); font-family: var(--font-num); font-size: 12px; font-variant-numeric: tabular-nums; }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks .tickMedian { color: var(--text-2); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; color: var(--muted); font-size: 12px; }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.keySpent { width: 8px; height: 8px; border-radius: 4px; background: var(--c); }
+.keyProj { width: 8px; height: 8px; border-radius: 4px; border: 2px solid var(--c); }
+.keyBand { width: 14px; height: 8px; border-radius: 4px; background: rgba(61, 155, 255, 0.16); border: 1px solid rgba(61, 155, 255, 0.45); }
+
+.history { margin: 12px 0 0; color: var(--text-2); font-size: 14px; line-height: 20px; }
+.history b { color: var(--text); }
+.progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 12px; }
+.progress span { height: 4px; border-radius: 2px; background: var(--border); }
+.progress .done { background: var(--text-2); }
+
+.lastRow { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.lastAmount { margin-top: 2px; font-family: var(--font-num); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.lastAmountOver { color: var(--danger); }
+
+.spacer { flex: 1; min-height: 16px; }
+.fabRow { display: flex; justify-content: flex-end; padding: 0 16px 14px; flex: none; transition: padding-bottom 0.2s ease; }
+.fabRowLifted { padding-bottom: 76px; }
+.fab {
+  display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 24px 0 18px;
+  color: var(--on-accent); font-size: 16px; font-weight: 600; text-decoration: none;
+  background: var(--accent); border-radius: 28px; box-shadow: 0 8px 24px rgba(61, 155, 255, 0.35);
+}
+.fabWide { flex: 1; justify-content: center; }
+
+/* first run */
+.welcome { margin: 64px 16px 0; }
+.welcomeTitle { margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; }
+.welcomeText { margin: 10px 0 0; color: var(--text-2); font-size: 15px; line-height: 22px; }
+.restoreCard { display: flex; align-items: center; gap: 12px; margin: 24px 16px 0; padding: 12px 12px 12px 16px; }
+.restoreIcon {
+  width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center;
+  color: var(--accent); background: var(--info-bg); border-radius: 20px;
+}
+.restoreTitle { font-size: 15px; font-weight: 600; }
+.restoreText { color: var(--muted); font-size: 13px; }
+.restoreButton {
+  margin-left: auto; height: 40px; padding: 0 16px; display: flex; align-items: center;
+  color: var(--text); font-size: 14px; font-weight: 600; text-decoration: none; background: var(--surface-2); border-radius: 20px;
+}

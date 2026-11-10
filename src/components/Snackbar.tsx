@@ -9,9 +9,27 @@ export interface SnackbarOptions {
 
 interface SnackbarApi {
   show: (options: SnackbarOptions) => void;
+  /** a message is on screen (Home lifts its Add button above it) */
+  visible: boolean;
 }
 
-const SnackbarContext = createContext<SnackbarApi>({ show: () => {} });
+const SnackbarContext = createContext<SnackbarApi>({ show: () => {}, visible: false });
+
+/**
+ * Where the snackbar sits on the current screen, in px from the bottom and right edges
+ * (safe area added automatically). Screens without a call use the form default (above the Save button).
+ */
+export function useSnackbarPlacement(bottom: number, right = 12): void {
+  useEffect(() => {
+    const root = document.documentElement.style;
+    root.setProperty('--snackbar-bottom', `${bottom}px`);
+    root.setProperty('--snackbar-right', `${right}px`);
+    return () => {
+      root.removeProperty('--snackbar-bottom');
+      root.removeProperty('--snackbar-right');
+    };
+  }, [bottom, right]);
+}
 
 export function useSnackbar(): SnackbarApi {
   return useContext(SnackbarContext);
@@ -35,7 +53,7 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [current]);
 
-  const api = useMemo(() => ({ show }), [show]);
+  const api = useMemo(() => ({ show, visible: current !== null }), [show, current]);
 
   return (
     <SnackbarContext.Provider value={api}>

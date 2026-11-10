@@ -11,3 +11,21 @@ export function useUsageCounts(index: 'expenseTypeId' | 'groupId'): Map<string, 
     return counts;
   }, [index]);
 }
+
+export interface Settings {
+  usualWindowMonths: number;
+  backupReminderDays: number;
+  lastBackupAt: string | null;
+}
+
+/** Settings and device state from the meta table, with defaults. */
+export function useSettings(): Settings | undefined {
+  return useLiveQuery(async () => {
+    const [window, reminder, last] = await db.meta.bulkGet(['usualWindowMonths', 'backupReminderDays', 'lastBackupAt']);
+    return {
+      usualWindowMonths: typeof window?.value === 'number' ? window.value : 12,
+      backupReminderDays: typeof reminder?.value === 'number' ? reminder.value : 14,
+      lastBackupAt: typeof last?.value === 'string' ? last.value : null,
+    };
+  }, []);
+}

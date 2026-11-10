@@ -20,6 +20,11 @@
   --danger: #ff8a90;
   --danger-bg: #2a2430;
   --danger-border: #5a3038;
+  --warn: #f2b34b;
+  --warn-bg: #3a3222;
+  --danger-badge-bg: #3a2328;
+  --glass: rgba(35, 42, 57, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.06);
   --positive: #5fd4a0;
   --positive-bg: #1d3a35;
 
@@ -67,3 +72,4 @@ a { color: var(--accent); }
   height: 40px; padding: 0 16px; border: 0; border-radius: 20px;
   background: var(--accent); color: var(--on-accent); font-weight: 600;
 }
+.tabPage { flex: 1; min-height: 0; overflow-y: auto; width: 100%; }

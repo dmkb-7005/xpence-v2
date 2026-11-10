@@ -1,11 +1,8 @@
-import { Link } from 'react-router-dom';
-
 export function Placeholder({ title, note }: { title: string; note?: string }) {
   return (
-    <main className="page">
-      <p><Link to="/">&larr; Home</Link></p>
+    <main className="page tabPage">
       <h1>{title}</h1>
-      <p>{note ?? 'Not implemented yet.'}</p>
+      <p style={{ color: 'var(--text-2)' }}>{note ?? 'Not designed yet.'}</p>
     </main>
   );
 }

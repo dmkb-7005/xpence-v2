@@ -49,3 +49,12 @@ Fields: date (default today), amount (same custom keypad as expenses), remark, *
 - Search mode filtered to dividends, with total footer, and with selection.
 - Add income form (keypad, kind selector).
 - Empty.
+
+## Notes after the add-expense design
+
+- Follow "Established visual system" in `00-overview.md`.
+- Colours: income and positive savings in **green** (positive), expenses in `text` or `muted` with a minus sign, negative savings in **red**. Savings % may use the same colours.
+- Year summaries: a raised `surface` card or a sticky header in the same style; months as rows or compact cards.
+- **Add / edit income reuses the amount card and keypad exactly.** The only new control is the kind selector: three chips *Regular · Dividend · Stock sale* (exactly one selected, accent fill), styled like the type chips. Date and Remark chips as on the add-expense screen; no Repeat, Group or Colour.
+- Kind filter in search mode: the same three chips plus *All*.
+- Dividends and stock sales may carry a small badge in lists (like the Refund/Scheduled badges).

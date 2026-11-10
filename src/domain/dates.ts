@@ -75,3 +75,9 @@ export function formatChipDate(date: IsoDate): string {
   const { year, month, day } = parseIsoDate(date);
   return `${WEEKDAYS[new Date(Date.UTC(year, month - 1, day)).getUTCDay()]}, ${formatDmy(date)}`;
 }
+
+/** `Tue` */
+export function weekdayShort(date: IsoDate): string {
+  const { year, month, day } = parseIsoDate(date);
+  return WEEKDAYS[new Date(Date.UTC(year, month - 1, day)).getUTCDay()] ?? '';
+}

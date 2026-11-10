@@ -36,3 +36,12 @@ Navigation to the other screens comes from the app-wide navigation (see overview
 ## Not wanted
 
 Charts, budgets with targets, motivational gamification.
+
+## Notes after the add-expense design
+
+- Follow "Established visual system" in `00-overview.md`: dark theme, tokens, Inter + Space Grotesk, pill chips and buttons.
+- **This screen defines the app-wide navigation** (for example a bottom bar with Home, Expenses, Budgets, Income, Setup and a prominent Add button). Forms such as add expense have no navigation bar, only the back header, so the navigation design applies to the five main screens.
+- After saving an expense the app returns here and shows the snackbar ("Expense saved", "Saved 4 expenses", "Refund saved"). Leave room for it above the navigation bar.
+- State colours: on track / better than usual = accent blue, trending over = amber, over = red, not enough history = muted. Last month above usual uses the same red or amber treatment with a label.
+- The hero figure uses the 48 px Space Grotesk style of the amount card; scheduled money uses the *Scheduled* style (clock, `text-2`).
+- Backup overdue uses amber; "never backed up" may use red.

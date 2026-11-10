@@ -1,5 +1,4 @@
 import { useState, type ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { buildBackup } from '../../backup/build';
 import { downloadText } from '../../backup/files';
@@ -68,8 +67,7 @@ export function SetupPage() {
   }
 
   return (
-    <main className="page">
-      <p><Link to="/">&larr; Home</Link></p>
+    <main className="page tabPage">
       <h1>Setup</h1>
 
       <h2>Stored on this device</h2>

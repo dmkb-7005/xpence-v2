@@ -1,20 +1,19 @@
 .snackbar {
   position: fixed;
   left: 12px;
-  right: 12px;
-  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  right: var(--snackbar-right, 12px);
+  bottom: calc(var(--snackbar-bottom, 96px) + env(safe-area-inset-bottom, 0px));
   z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  max-width: 616px;
   min-height: 48px;
-  margin: 0 auto;
   padding: 6px 8px 6px 16px;
   color: var(--text);
   font-size: 14px;
-  background: #313a4d;
+  background: #2e3647;
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
 }
