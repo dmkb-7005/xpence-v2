@@ -72,7 +72,7 @@ legacy-data/        gitignored: the old JSON exports
 5. Expenses list (infinite scroll, filters, selection) and Home totals.
 6. Budgets and Income screens (kind filters, search, selection totals).
 7. Setup: lookups, settings, storage info, backup UI.
-8. Visual design pass from the legacy look.
+8. Modernised UI/UX design pass (the legacy screenshots show behaviour, not the target look).
 
 ## Risks
 

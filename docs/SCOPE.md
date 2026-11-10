@@ -27,7 +27,7 @@ Accounts, sync, multi-device, sub-groups, manually entered budgets, charts, rema
 
 ## Screens
 
-Mobile-first. Visual design follows the legacy look and comes in a later phase. Behaviour below is binding.
+Mobile-first. The legacy screenshots define functionality only, not the look: the UI/UX is redesigned and modernised in a dedicated design pass. Behaviour below is binding.
 
 ### Home (`/`)
 Today's date, current-month total (spent up to and including today), last-month total, projected month-end with the state against the usual range (see DATA-MODEL, Calculations), scheduled-but-future amount for this month if any, last backup time with an overdue hint, and buttons: Add expense, View expenses, View budgets, Income, Setup.

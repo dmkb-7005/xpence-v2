@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addMonthsClamped, addMonthsToKey, isValidIsoDate, monthKeyOf, todayIso } from './dates';
+import { addMonthsClamped, addMonthsToKey, formatChipDate, formatDmy, isValidIsoDate, monthKeyOf, todayIso } from './dates';
 import { repeatDates } from './repeats';
 
 describe('dates', () => {
@@ -43,5 +43,13 @@ describe('repeatDates', () => {
     expect(() => repeatDates('2026-11-14', -1)).toThrow();
     expect(() => repeatDates('2026-11-14', 1.5)).toThrow();
     expect(() => repeatDates('2026-11-14', 121)).toThrow();
+  });
+});
+
+describe('chip dates', () => {
+  it('formats with weekday', () => {
+    expect(formatChipDate('2026-11-10')).toBe('Tue, 10-11-2026');
+    expect(formatChipDate('2026-11-14')).toBe('Sat, 14-11-2026');
+    expect(formatDmy('2027-02-14')).toBe('14-02-2027');
   });
 });

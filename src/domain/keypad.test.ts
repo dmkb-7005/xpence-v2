@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluateAmount, formatExpression, pressKey } from './keypad';
+import { amountView, evaluateAmount, formatExpression, pressKey } from './keypad';
 
 const type = (...keys: string[]) => keys.reduce((expr, key) => pressKey(expr, key), '');
 
@@ -73,5 +73,26 @@ describe('formatExpression', () => {
     expect(formatExpression('12,5+3*4/2')).toBe('12,5 + 3 × 4 ÷ 2');
     expect(formatExpression('-5')).toBe('-5');
     expect(formatExpression('5-')).toBe('5 -');
+  });
+});
+
+describe('amountView', () => {
+  it('shows €0,00 when empty', () => {
+    expect(amountView('')).toEqual({ state: 'empty', big: '€0,00', line: null });
+  });
+
+  it('shows a plain number as typed, with thousands separators', () => {
+    expect(amountView('12,5')).toEqual({ state: 'value', big: '€12,5', line: null, negative: false });
+    expect(amountView('1250')).toEqual({ state: 'value', big: '€1.250', line: null, negative: false });
+    expect(amountView('-25')).toEqual({ state: 'value', big: '-€25', line: null, negative: true });
+  });
+
+  it('shows the expression small and the result big', () => {
+    expect(amountView('12,5+8,2')).toEqual({ state: 'value', big: '€20,70', line: '12,5 + 8,2', negative: false });
+    expect(amountView('5-')).toEqual({ state: 'value', big: '€5,00', line: '5 -', negative: false });
+  });
+
+  it('reports division by zero', () => {
+    expect(amountView('20,7/0')).toEqual({ state: 'error', message: 'Cannot divide by zero', line: '20,7 ÷ 0' });
   });
 });

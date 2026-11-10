@@ -61,3 +61,17 @@ export function addMonthsClamped(date: IsoDate, months: number): IsoDate {
 export function todayIso(now: Date = new Date()): IsoDate {
   return toIsoDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
 }
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+
+/** `10-11-2026` */
+export function formatDmy(date: IsoDate): string {
+  const { year, month, day } = parseIsoDate(date);
+  return `${pad2(day)}-${pad2(month)}-${pad4(year)}`;
+}
+
+/** `Tue, 10-11-2026` */
+export function formatChipDate(date: IsoDate): string {
+  const { year, month, day } = parseIsoDate(date);
+  return `${WEEKDAYS[new Date(Date.UTC(year, month - 1, day)).getUTCDay()]}, ${formatDmy(date)}`;
+}

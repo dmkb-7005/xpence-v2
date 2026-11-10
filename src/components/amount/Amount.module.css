@@ -1,0 +1,95 @@
+/* ---- amount card ---- */
+.card {
+  display: block;
+  width: 100%;
+  padding: 10px 16px 12px;
+  text-align: right;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+}
+.card[data-open='true'] { border-color: var(--accent); }
+.card[data-error='true'] { border-color: var(--danger); background: var(--danger-bg); }
+.card[data-dashed='true'] { border-style: dashed; border-color: var(--border-dashed); }
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  height: 22px;
+  color: var(--muted);
+}
+.toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.toggle svg { color: var(--accent); flex: none; }
+.expr {
+  overflow: hidden;
+  font-family: var(--font-num);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  direction: rtl; /* keeps the end of a long expression visible */
+}
+.op { color: var(--accent); }
+.big {
+  height: 53px;
+  overflow: hidden;
+  font-family: var(--font-num);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 53px;
+  letter-spacing: -1.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.big[data-long='true'] { font-size: 36px; letter-spacing: -1px; }
+.placeholder { color: var(--faint); }
+.positive { color: var(--positive); }
+.scheduledAmount { color: var(--text-2); }
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 53px;
+  color: var(--danger);
+  font-size: 18px;
+  font-weight: 600;
+}
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 11px;
+  flex: none;
+}
+.badgeRefund { color: var(--positive); background: var(--positive-bg); }
+.badgeScheduled { color: #c3cada; background: var(--surface-2); }
+
+/* ---- keypad ---- */
+.keypad {
+  display: grid;
+  grid-template-columns: 64px repeat(3, 1fr);
+  gap: 5px;
+  padding: 0 8px;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.key {
+  height: 58px;
+  color: var(--text);
+  font-family: var(--font-num);
+  font-size: 26px;
+  background: var(--key);
+  border: 0;
+  border-radius: var(--r-key);
+}
+.key:active { filter: brightness(1.25); }
+.keyOp { color: var(--accent); font-family: var(--font-ui); font-size: 24px; background: var(--key-op); }
+.keyBack { display: flex; align-items: center; justify-content: center; background: var(--surface-2); }

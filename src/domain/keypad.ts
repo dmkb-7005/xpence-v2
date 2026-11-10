@@ -1,4 +1,4 @@
-import { evaluateExpression, type ParseResult } from './money';
+import { evaluateExpression, formatCents, type ParseResult } from './money';
 
 const OPERATORS = '+-*/';
 const MAX_LENGTH = 40;
@@ -57,4 +57,34 @@ export function formatExpression(expr: string): string {
     .replace(/\*/g, '×')
     .replace(/\//g, '÷')
     .trimEnd();
+}
+
+export type AmountView =
+  | { state: 'empty'; big: string; line: null }
+  | { state: 'value'; big: string; line: string | null; negative: boolean }
+  | { state: 'error'; message: string; line: string };
+
+const OPERATION = /(?<=[0-9,])[+\-*/]/;
+
+/**
+ * What the amount card shows. With an operation: the expression on the small line and the result big.
+ * Without one: the number as typed, big (`€12,5`, `-€25`), so typing feels direct.
+ */
+export function amountView(expr: string): AmountView {
+  if (expr === '' || expr === '-') return { state: 'empty', big: expr === '-' ? '-€' : '€0,00', line: null };
+  const hasOperation = OPERATION.test(expr);
+  const result = evaluateAmount(expr);
+  if (!result.ok && result.error === 'divide-by-zero') {
+    return { state: 'error', message: 'Cannot divide by zero', line: formatExpression(expr) };
+  }
+  if (!result.ok) {
+    return { state: 'error', message: 'Check the calculation', line: formatExpression(expr) };
+  }
+  if (hasOperation) {
+    return { state: 'value', big: formatCents(result.cents), line: formatExpression(expr), negative: result.cents < 0 };
+  }
+  const negative = expr.startsWith('-');
+  const digits = negative ? expr.slice(1) : expr;
+  const grouped = digits.replace(/^(\d+)/, (m) => m.replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+  return { state: 'value', big: `${negative ? '-' : ''}€${grouped}`, line: null, negative: result.cents < 0 };
 }
