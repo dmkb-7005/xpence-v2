@@ -10,7 +10,7 @@ Local-first personal expense tracker (PWA). All data stays in IndexedDB on the d
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/xpence/
+npm run dev        # http://localhost:5173/xpence-v2/
 npm run typecheck
 npm test
 npm run build
@@ -18,7 +18,7 @@ npm run build
 
 ## Deploy
 
-Pushing to `main` builds and publishes to https://dmkb-7005.github.io/xpence/ via GitHub Actions.
+Pushing to `main` builds and publishes to https://dmkb-7005.github.io/xpence-v2/ via GitHub Actions.
 One-time setup: repository **Settings → Pages → Source: GitHub Actions**.
 Commit `package-lock.json` (created by `npm install`), because the workflow uses `npm ci`.
 
