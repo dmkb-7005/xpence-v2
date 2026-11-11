@@ -8,8 +8,7 @@ export interface Dated {
 
 /** Months of history used for the usual range (setting `usualWindowMonths`). */
 export type UsualWindow = 3 | 6 | 12;
-/** Fewer complete months than this and every comparison is hidden. */
-export const MIN_USUAL_MONTHS = 3;
+/** Usual values exist only once the whole window (3, 6 or 12 complete months) has history. */
 
 export interface UsualRange {
   /** the complete months the range is based on, oldest first */
@@ -77,7 +76,7 @@ export function computeUsual(
   size: number,
 ): UsualRange | null {
   const months = windowFor(focal, size, firstMonth);
-  if (months.length < MIN_USUAL_MONTHS) return null;
+  if (months.length < size) return null;
   const values = months.map((m) => totals.get(m) ?? 0);
   return {
     months,

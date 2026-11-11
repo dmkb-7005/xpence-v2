@@ -19,7 +19,7 @@ describe('usual range', () => {
   });
 
   it('computes median and the 25th to 75th percentile band', () => {
-    const usual = computeUsual(totalsByMonth(history), firstMonthOf(history), '2026-11', 12);
+    const usual = computeUsual(totalsByMonth(history), firstMonthOf(history), '2026-11', 4);
     expect(usual?.median).toBe(2500);
     expect(usual?.lower).toBe(1750);
     expect(usual?.upper).toBe(3250);
@@ -27,15 +27,17 @@ describe('usual range', () => {
 
   it('counts zero-spend months inside the span', () => {
     const totals = new Map([['2026-07', 3000]]);
-    const usual = computeUsual(totals, '2026-07', '2026-11', 12);
+    const usual = computeUsual(totals, '2026-07', '2026-11', 4);
     expect(usual?.months).toEqual(['2026-07', '2026-08', '2026-09', '2026-10']);
     expect(usual?.median).toBe(0);
     expect(usual?.upper).toBe(750);
   });
 
-  it('hides the comparison with fewer than 3 complete months', () => {
-    const short = history.filter((r) => r.date >= '2026-09-01');
-    expect(computeUsual(totalsByMonth(short), firstMonthOf(short), '2026-11', 12)).toBeNull();
+  it('hides the comparison until the whole window has history', () => {
+    const totals = totalsByMonth(history);
+    expect(computeUsual(totals, firstMonthOf(history), '2026-11', 12)).toBeNull(); // 4 of 12
+    expect(computeUsual(totals, firstMonthOf(history), '2026-11', 6)).toBeNull(); // 4 of 6
+    expect(computeUsual(totals, firstMonthOf(history), '2026-11', 3)?.months).toEqual(['2026-08', '2026-09', '2026-10']);
   });
 });
 
@@ -43,7 +45,7 @@ describe('pace', () => {
   const today = '2026-11-10';
 
   it('is on track when the projection stays inside the range', () => {
-    const pace = computePace([...history, row('2026-11-01', 1500), row('2026-11-14', 1499)], today, 12);
+    const pace = computePace([...history, row('2026-11-01', 1500), row('2026-11-14', 1499)], today, 4);
     expect(pace.spentToDate).toBe(1500);
     expect(pace.scheduled).toBe(1499);
     expect(pace.usualToDate).toBe(1250);
@@ -55,31 +57,31 @@ describe('pace', () => {
   });
 
   it('is better than usual when the projection is below the median', () => {
-    const pace = computePace([...history, row('2026-11-01', 500)], today, 12);
+    const pace = computePace([...history, row('2026-11-01', 500)], today, 4);
     expect(pace.projected).toBe(1750);
     expect(pace.state).toBe('onTrack');
     expect(pace.betterThanUsual).toBe(true);
   });
 
   it('trends over when the projection leaves the range but spend so far has not', () => {
-    const pace = computePace([...history, row('2026-11-01', 2400)], today, 12);
+    const pace = computePace([...history, row('2026-11-01', 2400)], today, 4);
     expect(pace.projected).toBe(3650);
     expect(pace.state).toBe('trendingOver');
   });
 
   it('is over when spend so far already exceeds the upper bound', () => {
-    const pace = computePace([...history, row('2026-11-01', 3300)], today, 12);
+    const pace = computePace([...history, row('2026-11-01', 3300)], today, 4);
     expect(pace.state).toBe('over');
   });
 
   it('does not count future rows as spent so far', () => {
-    const pace = computePace([...history, row('2026-11-14', 1499)], today, 12);
+    const pace = computePace([...history, row('2026-11-14', 1499)], today, 4);
     expect(pace.spentToDate).toBe(0);
     expect(pace.scheduled).toBe(1499);
   });
 
   it('keeps totals but hides the comparison without enough history', () => {
-    const pace = computePace([row('2026-10-05', 100), row('2026-11-02', 700)], today, 12);
+    const pace = computePace([row('2026-10-05', 100), row('2026-11-02', 700)], today, 4);
     expect(pace.spentToDate).toBe(700);
     expect(pace.usual).toBeNull();
     expect(pace.projected).toBeNull();
@@ -90,12 +92,12 @@ describe('pace', () => {
 describe('assessMonth', () => {
   it('flags a complete month above the usual range', () => {
     const items = [...history, row('2026-11-05', 3800)];
-    // window for Nov: Jul..Oct, upper = 3250
-    expect(assessMonth(items, '2026-11', 12).aboveUsual).toBe(true);
-    expect(assessMonth(items, '2026-11', 12).total).toBe(3800);
+    // window for Nov: Jul..Oct (4 months), upper = 3250
+    expect(assessMonth(items, '2026-11', 4).aboveUsual).toBe(true);
+    expect(assessMonth(items, '2026-11', 4).total).toBe(3800);
   });
 
   it('does not flag a month inside the range', () => {
-    expect(assessMonth([...history, row('2026-11-05', 3000)], '2026-11', 12).aboveUsual).toBe(false);
+    expect(assessMonth([...history, row('2026-11-05', 3000)], '2026-11', 4).aboveUsual).toBe(false);
   });
 });

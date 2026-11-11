@@ -30,7 +30,7 @@ Rules:
 
 ## Calculations (pure functions in `domain/`)
 
-Let `W` = `usualWindowMonths`. For a month `M`, the **window** is the `W` complete months immediately before `M`, never earlier than the first month with any data. Months with zero spend inside the span count. If fewer than 3 complete months exist, all "usual" comparisons are hidden.
+Let `W` = `usualWindowMonths`. For a month `M`, the **window** is the `W` complete months immediately before `M`, never earlier than the first month with any data. Months with zero spend inside the span count. Until the whole window (`W` complete months) has history, all "usual" comparisons are hidden; Home shows how many of the `W` months exist so far.
 
 - Percentiles use linear interpolation (type 7). `median = p50`.
 - `usualTotal(M)` = median of the window's monthly totals.
