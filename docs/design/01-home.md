@@ -1,5 +1,7 @@
 # Design brief: Home
 
+> **Status: implemented** in v2.0.0 from the Claude Design canvas. Where the app and this brief differ, the app and `docs/SCOPE.md` are current.
+
 ## Purpose
 
 The screen the app opens to. In two seconds the user must know **how this month is going compared with what is usual**, and be one tap from adding an expense.

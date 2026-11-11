@@ -1,5 +1,7 @@
 # Design brief: Income (and add / edit income)
 
+> **Status: implemented** in v2.0.0 from the Claude Design canvas. Where the app and this brief differ, the app and `docs/SCOPE.md` are current.
+
 ## Purpose
 
 See **income versus expenses** month by month and per year, with savings and savings %. This is the user's main long-term view of whether he is saving enough. **No charts**; the legacy figures-based layout is liked, but should look modern.

@@ -1,5 +1,7 @@
 # Design brief: Setup
 
+> **Status: implemented** in v2.0.0 from the Claude Design canvas. Where the app and this brief differ, the app and `docs/SCOPE.md` are current.
+
 ## Purpose
 
 Manage the lookup lists, settings and, most importantly, **backups**: the data exists only on this phone, so backup is part of the product.

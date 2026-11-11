@@ -1,5 +1,7 @@
 # Design brief: Budgets (monthly comparison by type)
 
+> **Status: implemented** in v2.0.0 from the Claude Design canvas. Where the app and this brief differ, the app and `docs/SCOPE.md` are current.
+
 The name is legacy; there are **no budget targets**. The screen compares actual spending per expense type with the user's usual spending for that type.
 
 ## Purpose

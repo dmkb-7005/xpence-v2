@@ -6,8 +6,6 @@ export interface Dated {
   amountCents: number;
 }
 
-/** Months of history used for the usual range (setting `usualWindowMonths`). */
-export type UsualWindow = 3 | 6 | 12;
 /** Usual values exist only once the whole window (3, 6 or 12 complete months) has history. */
 
 export interface UsualRange {

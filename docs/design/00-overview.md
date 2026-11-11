@@ -1,5 +1,7 @@
 # Xpence: Design brief, overview
 
+> **Status: all six screens implemented** in v2.0.0. These briefs are kept as the design record; `docs/SCOPE.md` describes current behaviour.
+
 Read this first. Each screen has its own brief (`01-home.md` … `06-setup.md`); this file holds what applies to all of them.
 
 ## What Xpence is

@@ -1,5 +1,7 @@
 # Design brief: Expenses list
 
+> **Status: implemented** in v2.0.0 from the Claude Design canvas. Where the app and this brief differ, the app and `docs/SCOPE.md` are current.
+
 ## Purpose
 
 Look up, check and correct expenses, and **total any subset** of them (by filter or by hand-picked selection).

@@ -1,5 +1,7 @@
 # Design brief: Add / edit expense
 
+> **Status: implemented** in v2.0.0 from the Claude Design canvas. Where the app and this brief differ, the app and `docs/SCOPE.md` are current.
+
 ## Purpose
 
 The most used screen. Entering an amount and a type and saving must take **a few seconds, mostly with the thumb**. It is opened from Home, from the navigation's add action and from the long-press app-icon shortcut "Add expense".

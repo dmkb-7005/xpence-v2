@@ -12,13 +12,13 @@ import { addMonthsToKey, formatChipDate, monthKeyOf, todayIso } from '../../doma
 import { monthName } from '../../domain/expenseFilter';
 import { toneFor } from '../../domain/budgets';
 import { formatEuroShort, rangeBar } from '../../domain/homeBar';
+import { backupStatus, daysAgo } from '../../domain/setup';
 import { formatCents } from '../../domain/money';
 import {
   assessMonth, computePace, firstMonthOf, windowFor, type Dated, type Pace,
 } from '../../domain/usual';
 import styles from './Home.module.css';
 
-const DAY_MS = 86_400_000;
 const stateColor = { onTrack: 'var(--accent)', trendingOver: 'var(--warn)', over: 'var(--danger)' } as const;
 
 export function HomePage() {
@@ -94,17 +94,13 @@ export function HomePage() {
 }
 
 function BackupStatus({ settings }: { settings: Settings }) {
-  const { lastBackupAt, backupReminderDays } = settings;
-  if (lastBackupAt === null) {
-    return (
-      <Link className={`${styles.backup} ${styles.backupDanger}`} to="/setup">
-        <WarnIcon />Never backed up
-      </Link>
-    );
+  // same rule as Setup, so both screens always agree
+  const { state, days } = backupStatus(settings.lastBackupAt, settings.backupReminderDays);
+  if (state === 'never') {
+    return <Link className={`${styles.backup} ${styles.backupDanger}`} to="/setup"><WarnIcon />Never backed up</Link>;
   }
-  const days = Math.max(0, Math.floor((Date.now() - Date.parse(lastBackupAt)) / DAY_MS));
-  const text = days === 0 ? 'Backed up today' : days === 1 ? 'Backup 1 day ago' : `Backup ${days} days ago`;
-  if (days >= backupReminderDays) {
+  const text = days === 0 ? 'Backed up today' : `Backup ${daysAgo(days)}`;
+  if (state === 'overdue') {
     return <Link className={`${styles.backup} ${styles.backupWarn}`} to="/setup"><WarnIcon />{text}</Link>;
   }
   return <Link className={styles.backup} to="/setup"><CloudCheckIcon />{text}</Link>;

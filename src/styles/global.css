@@ -50,16 +50,9 @@ button:disabled { cursor: default; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 a { color: var(--accent); }
 
-/* interim pages (replaced as each screen gets its design) */
+/* plain page for the rare "entry no longer exists" screens */
 .page {
   max-width: 640px;
   margin: 0 auto;
   padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
 }
-.btn {
-  display: flex; align-items: center; justify-content: center;
-  width: 100%; min-height: 52px; margin: 0 0 10px; padding: 0 16px;
-  background: var(--surface-2); color: var(--text); font-weight: 600;
-  text-decoration: none; border: 0; border-radius: 26px;
-}
-.tabPage { flex: 1; min-height: 0; overflow-y: auto; width: 100%; }
