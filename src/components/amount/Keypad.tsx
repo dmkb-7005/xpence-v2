@@ -10,11 +10,11 @@ interface Props {
 
 const HOLD_TO_CLEAR_MS = 500;
 
-// Row by row: operator column on the left (thumb side for right-handers is the digits), as designed.
+// Row by row: operator column on the left, digits in phone order (1-2-3 on top, 7-8-9 at the bottom).
 const ROWS: readonly (readonly [string, string, string?])[] = [
-  ['÷', '/', 'Divide'], ['7', '7'], ['8', '8'], ['9', '9'],
+  ['÷', '/', 'Divide'], ['1', '1'], ['2', '2'], ['3', '3'],
   ['×', '*', 'Multiply'], ['4', '4'], ['5', '5'], ['6', '6'],
-  ['−', '-', 'Minus'], ['1', '1'], ['2', '2'], ['3', '3'],
+  ['−', '-', 'Minus'], ['7', '7'], ['8', '8'], ['9', '9'],
   ['+', '+', 'Plus'], [',', ',', 'Decimal comma'], ['0', '0'],
 ];
 

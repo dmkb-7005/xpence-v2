@@ -13,14 +13,22 @@ export function downloadText(filename: string, text: string, mime = 'application
 export type ShareResult = 'shared' | 'downloaded' | 'cancelled';
 
 /**
- * Android share sheet (Dropbox, pCloud, …) when the browser can share files, otherwise a download.
+ * Android share sheet (Dropbox, pCloud, …) when the browser can share the file, otherwise a download.
  * "cancelled" means the user closed the share sheet: nothing was saved.
+ *
+ * Chrome on Android only shares an allowlist of file types (text, CSV, PDF, images, media), so a JSON
+ * backup is shared under `shareAs` (a .txt name with text/plain); the download keeps the real name.
  */
-export async function shareOrDownload(filename: string, text: string, mime: string): Promise<ShareResult> {
-  const file = new File([text], filename, { type: mime });
+export async function shareOrDownload(
+  filename: string,
+  text: string,
+  mime: string,
+  shareAs?: { filename: string; mime: string },
+): Promise<ShareResult> {
+  const file = new File([text], shareAs?.filename ?? filename, { type: shareAs?.mime ?? mime });
   if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: filename });
+      await navigator.share({ files: [file], title: file.name });
       return 'shared';
     } catch (e) {
       if (e instanceof DOMException && e.name === 'AbortError') return 'cancelled';

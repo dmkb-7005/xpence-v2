@@ -66,7 +66,8 @@ export function SetupPage() {
 
   async function exportJson() {
     const backup = await buildBackup(db);
-    const result = await shareOrDownload(`xpence-backup-${todayIso()}.json`, JSON.stringify(backup), 'application/json');
+    const name = `xpence-backup-${todayIso()}.json`;
+    const result = await shareOrDownload(name, JSON.stringify(backup), 'application/json', { filename: `${name}.txt`, mime: 'text/plain' });
     if (result === 'cancelled') return;
     await setMeta('lastBackupAt', new Date().toISOString());
     snackbar.show({ message: result === 'shared' ? 'Backup shared' : 'Backup downloaded' });
@@ -163,7 +164,7 @@ export function SetupPage() {
             <button type="button" className={styles.secondary} onClick={() => setCsvOpen(true)}><UploadIcon />Export CSV</button>
             <button type="button" className={styles.secondary} onClick={() => fileInput.current?.click()}><RestoreIcon size={18} />Restore</button>
           </div>
-          <input ref={fileInput} type="file" accept=".json,application/json" hidden onChange={(e) => void onFile(e)} />
+          <input ref={fileInput} type="file" accept=".json,.txt,application/json,text/plain" hidden onChange={(e) => void onFile(e)} />
           <div className={styles.hint}>Opens the share sheet, so you can send the file to Dropbox or pCloud.</div>
         </section>
 
