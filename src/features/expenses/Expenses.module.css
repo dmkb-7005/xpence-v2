@@ -172,3 +172,12 @@
 }
 .showButton:disabled { color: var(--faint); background: var(--disabled-bg); }
 .searchInput:focus-visible { outline: none; }
+
+/* exclusion mode */
+.rowExcluded[aria-pressed='true'] { background: transparent; }
+.rowExcluded { opacity: 0.45; }
+.rowExcluded .amount { text-decoration: line-through; }
+.totalButton { color: var(--text); text-align: left; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.totalExclude { background: var(--warn-bg); border: 1.5px dashed var(--warn); }
+.totalExclude .totalLabel { color: var(--warn); font-weight: 600; }
+.totalSub { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }

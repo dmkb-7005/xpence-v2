@@ -17,6 +17,7 @@ import { formatCsvAmount } from '../../domain/money';
 import { MAX_REPEAT_MONTHS, repeatDates } from '../../domain/repeats';
 import { sortByUsage } from '../../domain/usage';
 import { buildExpenseRows } from './buildRows';
+import { rememberDate, rememberedDate } from './lastDate';
 import styles from './ExpenseForm.module.css';
 
 /** How many type chips are shown before "All N". */
@@ -60,7 +61,7 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
   const groupUsage = useUsageCounts('groupId');
 
   const today = todayIso();
-  const [date, setDate] = useState(existing?.date ?? today);
+  const [date, setDate] = useState(() => existing?.date ?? rememberedDate(today));
   const [expr, setExpr] = useState(existing ? plainAmount(existing.amountCents) : '');
   const [typeId, setTypeId] = useState(existing?.expenseTypeId ?? '');
   const [groupId, setGroupId] = useState(existing?.groupId ?? '');
@@ -162,6 +163,7 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
           nowIso,
         );
         await db.expenses.bulkAdd(rows);
+        rememberDate(date);
         snackbar.show({
           message: rows.length > 1 ? `Saved ${rows.length} expenses` : negative ? 'Refund saved' : 'Expense saved',
           actionLabel: 'View',
@@ -251,7 +253,7 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
         )}
 
         <div className={styles.row}>
-          <label className={`${styles.chip} ${styles.grow} ${styles.date}`}>
+          <label className={`${styles.chip} ${styles.grow} ${styles.date} ${!existing && date !== today ? styles.dateNotToday : ''}`}>
             <CalendarIcon className={styles.chipIcon} />
             <span className={styles.chipLabel}>{isValidIsoDate(date) ? formatChipDate(date) : 'Pick a date'}</span>
             <input

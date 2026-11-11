@@ -14,6 +14,7 @@ import { formatCents } from '../../domain/money';
 import { sortByUsage } from '../../domain/usage';
 import { ExpenseRow } from './ExpenseRow';
 import { ColourSheet, DateSheet, OptionSheet } from './FilterSheets';
+import { useLongPress } from './useLongPress';
 import styles from './Expenses.module.css';
 
 const PAGE = 60;
@@ -47,6 +48,11 @@ export function ExpensesPage() {
   const [filtersOpen, setFiltersOpen] = useState(initial.filtersOpen);
   const [renderCount, setRenderCount] = useState(initial.renderCount);
   const [selected, setSelected] = useState<ReadonlySet<string> | null>(null);
+  /** exclusion mode: ids left out of the running total; null = mode off */
+  const [excluded, setExcluded] = useState<ReadonlySet<string> | null>(null);
+  const totalPress = useLongPress(() => {
+    setExcluded((ex) => (ex ? null : new Set()));
+  });
   const [sheet, setSheet] = useState<Sheet>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -108,6 +114,11 @@ export function ExpensesPage() {
     memory = { ...latest.current, scrollTop: listRef.current?.scrollTop ?? 0 };
   }, []);
 
+  const filtersActive = activeFilterCount(filter) + (filter.query ? 1 : 0) > 0;
+  useEffect(() => {
+    if (!filtersActive) setExcluded(null);
+  }, [filtersActive]);
+
   const typeById = useMemo(() => new Map((types ?? []).map((t) => [t.id, t])), [types]);
   const groupById = useMemo(() => new Map((groups ?? []).map((g) => [g.id, g])), [groups]);
   const colorById = useMemo(() => new Map((colors ?? []).map((c) => [c.id, c])), [colors]);
@@ -119,6 +130,12 @@ export function ExpensesPage() {
     return next.size === 0 ? null : next;
   }), []);
   const startSelect = useCallback((id: string) => setSelected(new Set([id])), []);
+  const toggleExclude = useCallback((id: string) => setExcluded((s) => {
+    if (!s) return s;
+    const next = new Set(s);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    return next;
+  }), []);
   const closeSheet = useCallback(() => setSheet(null), []);
   const apply = (f: ExpenseFilter) => { setFilter(f); setSheet(null); };
 
@@ -128,6 +145,9 @@ export function ExpensesPage() {
   const filterCount = activeFilterCount(filter) + (filter.query ? 1 : 0);
   const anyFilter = filterCount > 0;
   const total = filtered.reduce((s, e) => s + e.amountCents, 0);
+  const excludeMode = excluded !== null && !selectMode;
+  const excludedRows = excluded ? filtered.filter((e) => excluded.has(e.id)) : [];
+  const runningTotal = total - excludedRows.reduce((s, e) => s + e.amountCents, 0);
   const selectedTotal = selected ? expenses.reduce((s, e) => (selected.has(e.id) ? s + e.amountCents : s), 0) : 0;
 
   // ---------- empty: nothing stored at all ----------
@@ -263,9 +283,12 @@ export function ExpensesPage() {
                       scheduled={e.date > today}
                       selectMode={selectMode}
                       selected={selected?.has(e.id) ?? false}
+                      excludeMode={excludeMode}
+                      excluded={excludeMode && (excluded?.has(e.id) ?? false)}
                       onOpen={open}
                       onToggle={toggle}
                       onStartSelect={startSelect}
+                      onToggleExclude={toggleExclude}
                     />
                   );
                 })}
@@ -286,12 +309,28 @@ export function ExpensesPage() {
         ) : (
           <>
             {anyFilter && (
-              <div className={styles.total} role="status">
-                <span className={styles.totalLabel}>{plural(filtered.length, 'expense', 'expenses')}</span>
-                <span className={styles.totalValue}>{formatCents(total)}</span>
-              </div>
+              // hold the total to start or end exclusion mode
+              <button
+                type="button"
+                className={`${styles.total} ${styles.totalButton} ${excludeMode ? styles.totalExclude : ''}`}
+                aria-live="polite"
+                aria-label={excludeMode
+                  ? `Total ${formatCents(runningTotal)} without ${excludedRows.length} excluded. Hold to finish excluding.`
+                  : `Total ${formatCents(total)} for ${filtered.length} expenses. Hold to exclude single expenses.`}
+                {...totalPress.handlers}
+                onClick={() => { totalPress.consumed(); }}
+              >
+                <span className={styles.totalLabel}>
+                  {!excludeMode && plural(filtered.length, 'expense', 'expenses')}
+                  {excludeMode && excludedRows.length === 0 && <>Tap expenses to exclude<span className={styles.totalSub}>Hold here to finish</span></>}
+                  {excludeMode && excludedRows.length > 0 && (
+                    <>{excludedRows.length} excluded<span className={styles.totalSub}>of {plural(filtered.length, 'expense', 'expenses')} · hold to finish</span></>
+                  )}
+                </span>
+                <span className={styles.totalValue}>{formatCents(excludeMode ? runningTotal : total)}</span>
+              </button>
             )}
-            <Link className={styles.fab} to="/expenses/new" aria-label="Add expense"><PlusIcon size={24} /></Link>
+            {!excludeMode && <Link className={styles.fab} to="/expenses/new" aria-label="Add expense"><PlusIcon size={24} /></Link>}
           </>
         )}
       </div>

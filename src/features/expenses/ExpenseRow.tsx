@@ -14,16 +14,20 @@ interface Props {
   scheduled: boolean;
   selectMode: boolean;
   selected: boolean;
+  /** exclusion mode: a tap leaves the row out of the running total */
+  excludeMode: boolean;
+  excluded: boolean;
   onOpen: (id: string) => void;
   onToggle: (id: string) => void;
   onStartSelect: (id: string) => void;
+  onToggleExclude: (id: string) => void;
 }
 
 export const ExpenseRow = memo(function ExpenseRow({
-  expense, typeName, groupName, color, scheduled, selectMode, selected, onOpen, onToggle, onStartSelect,
+  expense, typeName, groupName, color, scheduled, selectMode, selected, excludeMode, excluded, onOpen, onToggle, onStartSelect, onToggleExclude,
 }: Props) {
   const longPress = useLongPress(() => {
-    if (!selectMode) onStartSelect(expense.id);
+    if (!selectMode && !excludeMode) onStartSelect(expense.id);
   });
   const refund = expense.amountCents < 0;
   const note = expense.note.trim();
@@ -31,12 +35,14 @@ export const ExpenseRow = memo(function ExpenseRow({
   return (
     <button
       type="button"
-      className={styles.row}
-      aria-pressed={selectMode ? selected : undefined}
+      className={`${styles.row} ${excluded ? styles.rowExcluded : ''}`}
+      aria-pressed={selectMode ? selected : excludeMode ? excluded : undefined}
+      aria-label={excludeMode ? `${typeName} ${formatCents(expense.amountCents)}, ${excluded ? 'excluded from' : 'counted in'} the total` : undefined}
       {...longPress.handlers}
       onClick={() => {
         if (longPress.consumed()) return;
-        if (selectMode) onToggle(expense.id);
+        if (excludeMode) onToggleExclude(expense.id);
+        else if (selectMode) onToggle(expense.id);
         else onOpen(expense.id);
       }}
     >
