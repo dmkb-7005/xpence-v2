@@ -1,0 +1,2 @@
+.kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kindLabel { display: block; margin: 14px 0 6px; color: var(--muted); font-size: 13px; }

@@ -14,18 +14,30 @@ interface SheetProps {
   onClose: () => void;
 }
 
-const showLabel = (n: number) => `Show ${n.toLocaleString('de-DE')} ${n === 1 ? 'expense' : 'expenses'}`;
+const showLabel = (n: number, one = 'expense', many = 'expenses') => `Show ${n.toLocaleString('de-DE')} ${n === 1 ? one : many}`;
 
 function ClearButton({ onClick }: { onClick: () => void }) {
   return <button type="button" className={styles.textButton} onClick={onClick}>Clear</button>;
 }
 
-export function DateSheet({ filter, today, countFor, onApply, onClose }: SheetProps) {
+interface DateFilter { preset: DatePreset | null; range: DateRange | null }
+
+/** Works for any filter with a date preset and range (expenses and incomes). */
+export function DateSheet<F extends DateFilter>({ filter, today, countFor, onApply, onClose, nouns = ['expense', 'expenses'] }: {
+  filter: F;
+  /** singular and plural for the "Show N …" button */
+  nouns?: readonly [string, string];
+  today: string;
+  countFor: (filter: F) => number;
+  onApply: (filter: F) => void;
+  onClose: () => void;
+}) {
   const [preset, setPreset] = useState<DatePreset | null>(filter.preset);
   const [range, setRange] = useState<DateRange | null>(filter.range);
   const draft = { ...filter, preset, range };
   // the custom range fields start from whatever is active, or this month
-  const shown = activeRange(draft, today) ?? activeRange({ ...filter, preset: 'this-month', range: null }, today)!;
+  const asRange = (f: DateFilter) => activeRange({ query: '', typeIds: [], groupIds: [], colorIds: [], preset: f.preset, range: f.range }, today);
+  const shown = asRange(draft) ?? asRange({ preset: 'this-month', range: null })!;
 
   const setDate = (which: 'from' | 'to', value: string) => {
     if (!isValidIsoDate(value)) return;
@@ -40,7 +52,7 @@ export function DateSheet({ filter, today, countFor, onApply, onClose }: SheetPr
       title="Date"
       onClose={onClose}
       headerAction={<ClearButton onClick={() => onApply({ ...filter, preset: null, range: null })} />}
-      footer={<button type="button" className={styles.showButton} onClick={() => onApply(draft)}>{showLabel(countFor(draft))}</button>}
+      footer={<button type="button" className={styles.showButton} onClick={() => onApply(draft)}>{showLabel(countFor(draft), nouns[0], nouns[1])}</button>}
     >
       <div className={styles.presets}>
         {DATE_PRESETS.map((p) => (
