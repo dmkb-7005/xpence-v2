@@ -2,7 +2,7 @@
 
 Xpence is a personal expense tracker, rewritten from a legacy server-backed mobile app as a **local-first PWA** for one user on one Android device.
 
-Status: **v2.0.0, all screens implemented** and in use on the phone. This document describes the app as built.
+Status: **v2.1.0, all screens implemented** and in use on the phone. This document describes the app as built.
 
 ## Goals
 
@@ -41,6 +41,7 @@ Each screen was designed in Claude Design from the briefs in `docs/design/` and 
 - **This month card**: spent to date, the pace state against the usual range (on track / trending over / over) and a range bar showing the usual p25–p75 band, the median, today's spend and the projected month end. Scheduled (future-dated) spend for this month is shown when present.
 - **Last month card**: last month's total, compared with the usual range of the window before it. It uses the same tone rule as Budgets: green only when *clearly below* usual, amber above, red way above.
 - **Not enough history**: until the whole usual window (3, 6 or 12 months, see Setup) has data, the comparison is replaced by a card counting how many of those months exist.
+- **Above usual by day N**: when the month is trending over or over, a card lists up to three expense types furthest above their own usual so far, with spent and usual amounts. Tapping one opens Expenses filtered to that type and this month.
 - Backup status line (today / N days ago / overdue / never) linking to Setup.
 - Add expense is one tap away.
 
@@ -51,6 +52,7 @@ Each screen was designed in Claude Design from the briefs in `docs/design/` and 
 - **Repeat**: saving creates the entered row plus N further real rows, same day-of-month (clamped to shorter months), sharing a `seriesId`. Editing or deleting one row affects only that row.
 - Type and group pickers list **most used first**. Hidden items are not offered.
 - Delete is immediate with an **Undo** snackbar.
+- **Repeat series**: editing a row that has later rows in its series asks *This and N later ones* or *This expense only* on save; deleting asks the same. Applying to later rows changes amount, type, group, colour and remark; their dates stay. Earlier rows are never touched. Deleting several can be undone.
 
 ### Expenses (`/expenses`)
 - Grouped by month, newest first, with sticky month headers showing the month total. Includes future-dated (scheduled) rows. **Infinite scroll** in chunks, no virtualisation.
@@ -59,11 +61,13 @@ Each screen was designed in Claude Design from the briefs in `docs/design/` and 
 - **Selection mode**: long-press a row, then tap rows; the bar shows the selected total.
 - **Exclusion mode**: long-press the total bar, then tap rows to subtract them from the running total (excluded rows are dimmed, amount struck out); long-press the bar again to leave. Month header totals are not affected.
 - Tap a row to edit it.
+- Other screens link in with preset filters (`?range=this-month`, or `?month=YYYY-MM&type=<id>`); a whole month shows as `Oct 2026` on the date chip, and the filter chips are shown open.
 
 ### Budgets (`/budgets`)
 - Arrows move the focal month; three columns show the previous, focal and next month.
 - One block per expense type, alphabetical: the type's *usual* (median of its window) and the actual, plus a total block with the difference from usual.
 - Tone per cell: **way above** (red), **above** (amber), **below** (green, complete months only), otherwise neutral. Future months show only existing rows and no tone. See DATA-MODEL, Calculations.
+- **Tap a value** to open Expenses filtered to that month and type (the Total row filters by month only). Empty cells are not tappable.
 - Types with no spending in the visible months and no in-window history are omitted.
 
 ### Income (`/income`)

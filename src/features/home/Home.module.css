@@ -82,6 +82,20 @@
 .lastAmount { margin-top: 2px; font-family: var(--font-num); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .lastAmountOver { color: var(--danger); }
 
+/* types above usual */
+.drivers { margin: 6px -8px -8px; padding: 0; list-style: none; }
+.driver {
+  display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 6px 8px;
+  color: var(--text); text-decoration: none; border-radius: 12px; -webkit-tap-highlight-color: transparent;
+}
+.driver:active { background: var(--surface-2); }
+.driver svg { flex: none; color: var(--muted); }
+.driverMain { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.driverName { overflow: hidden; font-size: 15px; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+.driverSub { color: var(--muted); font-size: 12px; }
+.driverOver { color: var(--warn); font-family: var(--font-num); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.driverOverDanger { color: var(--danger); }
+
 .spacer { flex: 1; min-height: 16px; }
 .fabRow { display: flex; justify-content: flex-end; padding: 0 16px 14px; flex: none; transition: padding-bottom 0.2s ease; }
 .fabRowLifted { padding-bottom: 76px; }

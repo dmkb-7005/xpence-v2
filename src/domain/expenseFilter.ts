@@ -24,11 +24,9 @@ export function presetRange(preset: DatePreset, today: IsoDate): DateRange {
   const month = monthKeyOf(today);
   switch (preset) {
     case 'this-month':
-      return { from: monthStart(month), to: monthEnd(month) };
-    case 'last-month': {
-      const prev = addMonthsToKey(month, -1);
-      return { from: monthStart(prev), to: monthEnd(prev) };
-    }
+      return monthRange(month);
+    case 'last-month':
+      return monthRange(addMonthsToKey(month, -1));
     case 'this-year':
       return { from: `${today.slice(0, 4)}-01-01`, to: `${today.slice(0, 4)}-12-31` };
     case 'last-12-months':
@@ -47,6 +45,43 @@ export interface ExpenseFilter {
 }
 
 export const EMPTY_FILTER: ExpenseFilter = { query: '', preset: null, range: null, typeIds: [], groupIds: [], colorIds: [] };
+
+/** The whole calendar month as a date range. */
+export function monthRange(key: MonthKey): DateRange {
+  return { from: monthStart(key), to: monthEnd(key) };
+}
+
+const MONTH_KEY = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+/**
+ * Link into the Expenses screen with preset filters:
+ * `?range=this-month`, or `?month=2026-10` with optional `&type=<id>`.
+ */
+export function expensesLink(opts: { month: MonthKey; typeId?: string }): string {
+  const params = new URLSearchParams({ month: opts.month });
+  if (opts.typeId) params.set('type', opts.typeId);
+  return `/expenses?${params.toString()}`;
+}
+
+/** The filter a link asks for, or null when the URL carries none (then the last view is restored). */
+export function filterFromParams(params: URLSearchParams): ExpenseFilter | null {
+  const range = params.get('range');
+  if (range !== null && DATE_PRESETS.some((p) => p.id === range)) return { ...EMPTY_FILTER, preset: range as DatePreset };
+  const month = params.get('month');
+  if (month === null || !MONTH_KEY.test(month)) return null;
+  const type = params.get('type');
+  return { ...EMPTY_FILTER, range: monthRange(month), typeIds: type ? [type] : [] };
+}
+
+const dmShort = (iso: IsoDate) => `${iso.slice(8, 10)}-${iso.slice(5, 7)}`;
+
+/** Date chip text for a custom range: `Oct 2026` for one whole month, otherwise `05-10 – 20-10`. */
+export function rangeLabel(range: DateRange): string {
+  const month = monthKeyOf(range.from);
+  const whole = monthRange(month);
+  if (range.from === whole.from && range.to === whole.to) return `${monthName(month).slice(0, 3)} ${month.slice(0, 4)}`;
+  return `${dmShort(range.from)} – ${dmShort(range.to)}`;
+}
 
 export function activeRange(filter: ExpenseFilter, today: IsoDate): DateRange | null {
   return filter.preset ? presetRange(filter.preset, today) : filter.range;

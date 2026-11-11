@@ -52,7 +52,8 @@ src/
   db/           Dexie schema, defaults, settings and usage hooks
   domain/       pure logic, each with tests: money, dates, keypad expression,
                 repeats, stats (percentiles), usual range and pace, budgets tones,
-                home range bar, savings, usage, expense/income filters, setup helpers
+                home range bar, types above usual (drivers), repeat series, savings,
+                usage, expense/income filters and links, setup helpers
   backup/       Zod schema, JSON/CSV export, restore, share/download helpers
   features/     home, expense-form, expenses, budgets, income, setup
   components/   icons, bottom sheet, snackbar, amount card and keypad
@@ -83,6 +84,7 @@ All done.
 7. Budgets and Income.
 8. Setup: lists, settings, storage, backup UI; icons; device checks.
 9. Cleanup: dead code removed, Zod 4 (`npm audit --omit=dev` clean), docs updated.
+10. v2.1.0: repeat-series edit/delete, "above usual by day N" on Home, Budgets values open filtered Expenses.
 
 ## Risks
 

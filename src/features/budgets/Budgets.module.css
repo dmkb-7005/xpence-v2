@@ -39,6 +39,8 @@
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
 }
 .cellTotal { padding: 10px 4px; }
+.cellLink { display: block; color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; transition: transform 0.08s ease; }
+.cellLink:active { transform: scale(0.96); border-color: rgba(61, 155, 255, 0.55); }
 .cellFocal { background: rgba(31, 45, 69, 0.85); border-color: rgba(61, 155, 255, 0.55); }
 .value {
   overflow: hidden; color: var(--text-2); font-family: var(--font-num); font-size: 15px; font-weight: 500;

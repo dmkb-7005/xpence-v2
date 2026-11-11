@@ -8,8 +8,10 @@ import { useSnackbar, useSnackbarPlacement } from '../../components/Snackbar';
 import { NAV_HEIGHT } from '../../app/TabLayout';
 import { db } from '../../db/db';
 import { useSettings, type Settings } from '../../db/hooks';
-import { addMonthsToKey, formatChipDate, monthKeyOf, todayIso } from '../../domain/dates';
-import { monthName } from '../../domain/expenseFilter';
+import { addMonthsToKey, dayOfMonth, formatChipDate, monthKeyOf, todayIso } from '../../domain/dates';
+import { monthDrivers } from '../../domain/drivers';
+import { expensesLink, monthName } from '../../domain/expenseFilter';
+import type { ExpenseType } from '../../db/schema';
 import { toneFor } from '../../domain/budgets';
 import { formatEuroShort, rangeBar } from '../../domain/homeBar';
 import { backupStatus, daysAgo } from '../../domain/setup';
@@ -23,12 +25,13 @@ const stateColor = { onTrack: 'var(--accent)', trendingOver: 'var(--warn)', over
 
 export function HomePage() {
   const expenses = useLiveQuery(() => db.expenses.toArray(), []);
+  const types = useLiveQuery(() => db.expenseTypes.toArray(), []);
   const settings = useSettings();
   const { visible: snackbarVisible } = useSnackbar();
   // between the lifted Add button and the navigation bar
   useSnackbarPlacement(NAV_HEIGHT + 12);
 
-  if (expenses === undefined || settings === undefined) return <div className={styles.screen} />;
+  if (expenses === undefined || settings === undefined || types === undefined) return <div className={styles.screen} />;
 
   const today = todayIso();
   const fab = (
@@ -85,6 +88,9 @@ export function HomePage() {
       </Link>
 
       {pace.usual ? <PaceCard pace={pace} size={size} month={month} /> : <NoHistoryCard expenses={expenses} month={month} size={size} />}
+      {(pace.state === 'over' || pace.state === 'trendingOver') && (
+        <DriversCard expenses={expenses} types={types} today={today} size={size} over={over} />
+      )}
       <LastMonthCard expenses={expenses} month={addMonthsToKey(month, -1)} size={size} />
 
       <div className={styles.spacer} />
@@ -162,6 +168,45 @@ function PaceCard({ pace, size, month }: { pace: Pace; size: number; month: stri
         <span><span className={styles.keyBand} />Usual · {size} mo</span>
       </div>
       {note && <p className={styles.note}>{note}</p>}
+    </section>
+  );
+}
+
+/** Which types push the month over: the ones furthest above their own usual by today. */
+function DriversCard({ expenses, types, today, size, over }: {
+  expenses: readonly { date: string; amountCents: number; expenseTypeId: string }[];
+  types: readonly ExpenseType[];
+  today: string;
+  size: number;
+  over: boolean;
+}) {
+  const drivers = monthDrivers(expenses, today, size);
+  if (drivers.length === 0) return null;
+  const month = monthKeyOf(today);
+  const names = new Map(types.map((t) => [t.id, t.name]));
+  return (
+    <section className={styles.card} aria-label="Types above usual this month">
+      <div className={styles.label}>Above usual by day {dayOfMonth(today)}</div>
+      <ul className={styles.drivers}>
+        {drivers.map((d) => {
+          const name = names.get(d.typeId) ?? '—';
+          return (
+            <li key={d.typeId}>
+              <Link className={styles.driver} to={expensesLink({ month, typeId: d.typeId })}
+                aria-label={`${name}: ${formatCents(d.spentCents)} spent, usual ${formatCents(d.usualCents)} by now, ${formatCents(d.overCents)} above. Show expenses`}>
+                <span className={styles.driverMain}>
+                  <span className={styles.driverName}>{name}</span>
+                  <span className={styles.driverSub}>
+                    <span className={styles.num}>{formatCents(d.spentCents)}</span> · usual <span className={styles.num}>{formatCents(d.usualCents)}</span>
+                  </span>
+                </span>
+                <span className={`${styles.driverOver} ${over ? styles.driverOverDanger : ''}`}>+{formatCents(d.overCents)}</span>
+                <ChevronRight />
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }

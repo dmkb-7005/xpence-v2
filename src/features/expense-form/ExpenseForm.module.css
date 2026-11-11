@@ -147,3 +147,14 @@
 .sheetItem[aria-pressed='true'] { color: var(--on-accent); font-weight: 600; background: var(--accent); }
 .sheetCount { color: var(--muted); font-size: 13px; }
 .sheetItem[aria-pressed='true'] .sheetCount { color: var(--on-accent); }
+
+/* ---- repeat series: this one / this and later ---- */
+.scopeText { margin: 0 0 4px; color: var(--text-2); font-size: 14px; line-height: 20px; }
+.scopeButtons { display: grid; gap: 6px; }
+.scopePrimary, .scopeDanger, .scopeSecondary {
+  height: 56px; font-size: 16px; font-weight: 600; border-radius: 28px;
+}
+.scopePrimary { color: var(--on-accent); background: var(--accent); border: 0; }
+.scopeDanger { color: #2a0f12; background: var(--danger); border: 0; }
+.scopeSecondary { color: var(--text); background: var(--surface-2); border: 0; }
+.scopeCancel { height: 48px; color: var(--text); font-size: 15px; font-weight: 600; background: transparent; border: 0; border-radius: 24px; }

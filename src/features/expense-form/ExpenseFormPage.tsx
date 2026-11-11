@@ -15,6 +15,7 @@ import { formatChipDate, formatDmy, isValidIsoDate, todayIso } from '../../domai
 import { amountView, evaluateAmount } from '../../domain/keypad';
 import { formatCsvAmount } from '../../domain/money';
 import { MAX_REPEAT_MONTHS, repeatDates } from '../../domain/repeats';
+import { applySeriesChanges, laterInSeries } from '../../domain/series';
 import { sortByUsage } from '../../domain/usage';
 import { buildExpenseRows } from './buildRows';
 import { rememberDate, rememberedDate } from './lastDate';
@@ -59,6 +60,12 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
   const colors = useLiveQuery(() => db.colors.toArray(), []);
   const typeUsage = useUsageCounts('expenseTypeId');
   const groupUsage = useUsageCounts('groupId');
+  // later rows of the same repeat series; the stored row decides which ones follow, not an edited date
+  const seriesId = existing?.seriesId ?? null;
+  const later = useLiveQuery(
+    async () => (existing && seriesId ? laterInSeries(await db.expenses.where('seriesId').equals(seriesId).toArray(), existing) : []),
+    [existing?.id, existing?.date, seriesId],
+  );
 
   const today = todayIso();
   const [date, setDate] = useState(() => existing?.date ?? rememberedDate(today));
@@ -75,8 +82,11 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
   const [focusRemark, setFocusRemark] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** asks whether a save or delete includes the later rows of the series */
+  const [scopeSheet, setScopeSheet] = useState<'save' | 'delete' | null>(null);
 
   const closeTypeSheet = useCallback(() => setTypeSheetOpen(false), []);
+  const closeScopeSheet = useCallback(() => setScopeSheet(null), []);
 
   useEffect(() => {
     if (focusRemark && !keypadOpen) {
@@ -85,7 +95,7 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
     }
   }, [focusRemark, keypadOpen]);
 
-  if (types === undefined || groups === undefined || colors === undefined) {
+  if (types === undefined || groups === undefined || colors === undefined || later === undefined) {
     return <div className={styles.screen} />;
   }
 
@@ -134,24 +144,35 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
     else navigate('/', { replace: true });
   };
 
-  async function save() {
+  // narrowed copy: the guard above doesn't carry into the save/remove functions below
+  const laterRows: Expense[] = later;
+  const laterCount = laterRows.length;
+  const lastLater = laterRows.at(-1);
+  const laterText = `${laterCount} later ${laterCount === 1 ? 'one' : 'ones'}`;
+  // non-breaking hyphens keep the date on one line
+  const untilText = lastLater ? formatDmy(lastLater.date).replace(/-/g, '\u2011') : '';
+
+  async function save(withLater = false) {
     if (problem !== null || !amount.ok || saving) return;
+    setScopeSheet(null);
     setSaving(true);
     setError(null);
     try {
       const nowIso = new Date().toISOString();
       if (existing) {
-        await db.expenses.put({
-          ...existing,
-          date,
+        const changes = {
           amountCents: amount.cents,
           expenseTypeId: typeId,
           groupId: groupId || null,
           colorId: colorId || null,
           note: note.trim(),
-          updatedAt: nowIso,
+        };
+        const updated = withLater ? applySeriesChanges(laterRows, changes, nowIso) : [];
+        await db.transaction('rw', db.expenses, async () => {
+          await db.expenses.put({ ...existing, ...changes, date, updatedAt: nowIso });
+          if (updated.length > 0) await db.expenses.bulkPut(updated);
         });
-        snackbar.show({ message: 'Expense updated' });
+        snackbar.show({ message: updated.length > 0 ? `${updated.length + 1} expenses updated` : 'Expense updated' });
         goBack();
       } else {
         const rows = buildExpenseRows(
@@ -177,13 +198,22 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
     }
   }
 
-  async function remove() {
+  async function remove(withLater = false) {
     if (!existing) return;
-    const deleted = existing;
-    await db.expenses.delete(deleted.id);
-    snackbar.show({ message: 'Expense deleted', actionLabel: 'Undo', onAction: () => void db.expenses.put(deleted) });
+    setScopeSheet(null);
+    const deleted = withLater ? [existing, ...laterRows] : [existing];
+    await db.expenses.bulkDelete(deleted.map((e) => e.id));
+    snackbar.show({
+      message: deleted.length > 1 ? `${deleted.length} expenses deleted` : 'Expense deleted',
+      actionLabel: 'Undo',
+      onAction: () => void db.expenses.bulkPut(deleted),
+    });
     goBack();
   }
+
+  // inside a series with later rows, ask first
+  const onSave = () => (existing && laterCount > 0 ? setScopeSheet('save') : void save());
+  const onDelete = () => (laterCount > 0 ? setScopeSheet('delete') : void remove());
 
   const lastRepeat = repeatCount > 0 && isValidIsoDate(date) ? repeatDates(date, repeatCount).at(-1) : undefined;
 
@@ -195,7 +225,7 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
         </button>
         <h1 className={styles.title}>{existing ? 'Edit expense' : 'New expense'}</h1>
         {existing && (
-          <button type="button" className={styles.delete} onClick={() => void remove()}>
+          <button type="button" className={styles.delete} onClick={onDelete}>
             <TrashIcon />Delete
           </button>
         )}
@@ -205,7 +235,11 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
         {existing?.seriesId && (
           <div className={styles.series}>
             <RepeatIcon size={18} />
-            <span>Part of a repeating series. Changes apply to this row only.</span>
+            <span>
+              {laterCount > 0 && lastLater
+                ? <>Repeats monthly, with {laterText} until {untilText}. Saving or deleting asks whether to include them.</>
+                : <>The last in its repeating series. Changes apply to this row only.</>}
+            </span>
           </div>
         )}
 
@@ -371,11 +405,37 @@ function ExpenseForm({ existing }: { existing?: Expense }) {
         {/* always rendered with a fixed height, so nothing above it moves when the message changes */}
         <p className={`${styles.hint} ${error ? styles.hintError : ''}`} role="status">{error ?? problem ?? ''}</p>
         <footer className={styles.footer}>
-          <button type="button" className={styles.save} disabled={problem !== null || saving} onClick={() => void save()}>
+          <button type="button" className={styles.save} disabled={problem !== null || saving} onClick={onSave}>
             {saveLabel}
           </button>
         </footer>
       </div>
+
+      {scopeSheet && lastLater && (
+        <BottomSheet title={scopeSheet === 'save' ? 'Save repeating expense' : 'Delete repeating expense'} onClose={closeScopeSheet} headerAction={<span />}
+          footer={
+            <div className={styles.scopeButtons}>
+              {scopeSheet === 'save' ? (
+                <>
+                  <button type="button" className={styles.scopePrimary} onClick={() => void save(true)}>This and {laterText}</button>
+                  <button type="button" className={styles.scopeSecondary} onClick={() => void save(false)}>This expense only</button>
+                </>
+              ) : (
+                <>
+                  <button type="button" className={styles.scopeDanger} onClick={() => void remove(true)}>Delete this and {laterText}</button>
+                  <button type="button" className={styles.scopeSecondary} onClick={() => void remove(false)}>Delete this one only</button>
+                </>
+              )}
+              <button type="button" className={styles.scopeCancel} onClick={closeScopeSheet}>Cancel</button>
+            </div>
+          }>
+          <p className={styles.scopeText}>
+            {scopeSheet === 'save'
+              ? <>This expense repeats monthly until {untilText}. Apply the amount, type, group, colour and remark to the {laterText} too? Their dates stay as they are.</>
+              : <>This expense repeats monthly until {untilText}. Earlier ones are kept either way.</>}
+          </p>
+        </BottomSheet>
+      )}
 
       {typeSheetOpen && (
         <BottomSheet title="Type" onClose={closeTypeSheet}>

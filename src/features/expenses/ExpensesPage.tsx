@@ -8,7 +8,7 @@ import { db } from '../../db/db';
 import { useUsageCounts } from '../../db/hooks';
 import { todayIso } from '../../domain/dates';
 import {
-  activeFilterCount, DATE_PRESETS, EMPTY_FILTER, groupByMonth, makeMatcher, monthHeader, type DatePreset, type ExpenseFilter,
+  activeFilterCount, DATE_PRESETS, EMPTY_FILTER, filterFromParams, groupByMonth, rangeLabel, makeMatcher, monthHeader, type ExpenseFilter,
 } from '../../domain/expenseFilter';
 import { formatCents } from '../../domain/money';
 import { sortByUsage } from '../../domain/usage';
@@ -22,8 +22,6 @@ const PAGE = 60;
 /** Kept across visits, so returning from an edit restores filters and position. */
 let memory: { filter: ExpenseFilter; filtersOpen: boolean; scrollTop: number; renderCount: number } | null = null;
 
-const isPreset = (v: string | null): v is DatePreset => DATE_PRESETS.some((p) => p.id === v);
-const dmShort = (iso: string) => `${iso.slice(8, 10)}-${iso.slice(5, 7)}`;
 const plural = (n: number, one: string, many: string) => `${n.toLocaleString('de-DE')} ${n === 1 ? one : many}`;
 
 type Sheet = 'date' | 'type' | 'group' | 'colour' | null;
@@ -33,14 +31,18 @@ export function ExpensesPage() {
   const [params, setParams] = useSearchParams();
   const today = todayIso();
 
-  // `?range=this-month` (from Home) starts a fresh, filtered view; otherwise restore the last one.
+  // A link with filters (`?range=this-month` from Home, `?month=…&type=…` from Budgets) starts a fresh,
+  // filtered view; otherwise restore the last one.
   const [initial] = useState(() => {
-    const range = params.get('range');
-    if (isPreset(range)) return { filter: { ...EMPTY_FILTER, preset: range }, filtersOpen: false, scrollTop: 0, renderCount: PAGE };
+    const linked = filterFromParams(params);
+    if (linked) {
+      // show the chips when the link sets more than the plain month preset, so it's clear what is filtered
+      return { filter: linked, filtersOpen: linked.preset === null, scrollTop: 0, renderCount: PAGE };
+    }
     return memory ?? { filter: EMPTY_FILTER, filtersOpen: false, scrollTop: 0, renderCount: PAGE };
   });
   useEffect(() => {
-    if (params.has('range')) setParams({}, { replace: true });
+    if (params.toString() !== '') setParams({}, { replace: true });
   }, [params, setParams]);
 
   const [filter, setFilter] = useState<ExpenseFilter>(initial.filter);
@@ -172,7 +174,7 @@ export function ExpensesPage() {
   const range = filter.preset ? null : filter.range;
   const dateLabel = filter.preset
     ? DATE_PRESETS.find((p) => p.id === filter.preset)!.label
-    : range ? `${dmShort(range.from)} – ${dmShort(range.to)}` : null;
+    : range ? rangeLabel(range) : null;
   const listLabel = (ids: readonly string[], byId: Map<string, { name: string }>, many: string) =>
     ids.length === 0 ? null : ids.length === 1 ? (byId.get(ids[0]!)?.name ?? '1 ' + many) : `${ids.length} ${many}`;
   const chips: { key: Sheet; label: string; active: string | null; clear: () => void }[] = [

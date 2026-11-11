@@ -9,7 +9,7 @@ import { db } from '../../db/db';
 import { useSettings } from '../../db/hooks';
 import { addMonthsToKey, monthKeyOf, todayIso } from '../../domain/dates';
 import { barGradient, budgetView, TONE_COLOR, type BudgetCell, type BudgetRow, type MonthTone } from '../../domain/budgets';
-import { monthName } from '../../domain/expenseFilter';
+import { expensesLink, monthName } from '../../domain/expenseFilter';
 import { formatCents } from '../../domain/money';
 import styles from './Budgets.module.css';
 
@@ -140,7 +140,11 @@ function Block({ row, total = false, hasHistory, onInfo, deltaFor }: {
         )}
       </div>
       <div className={styles.cells}>
-        {row.cells.map((cell, i) => <Cell key={cell.month} cell={cell} focal={i === 1} total={total} delta={deltaFor?.(i)} />)}
+        {row.cells.map((cell, i) => (
+          <Cell key={cell.month} cell={cell} focal={i === 1} total={total} delta={deltaFor?.(i)}
+            to={expensesLink({ month: cell.month, typeId: total ? undefined : row.typeId })}
+            label={`${total ? 'All expenses' : row.name}, ${monthName(cell.month)} ${cell.month.slice(0, 4)}: ${formatCents(cell.valueCents)}. Show expenses`} />
+        ))}
       </div>
       {hasHistory && (
         <div className={styles.bar} style={{ background: barGradient(row.cells.map((c) => c.tone)) }} role="img"
@@ -150,14 +154,20 @@ function Block({ row, total = false, hasHistory, onInfo, deltaFor }: {
   );
 }
 
-function Cell({ cell, focal, total, delta }: { cell: BudgetCell; focal: boolean; total: boolean; delta?: string }) {
+/** A cell with spending opens Expenses filtered to that month (and type); an empty one is plain. */
+function Cell({ cell, focal, total, delta, to, label }: {
+  cell: BudgetCell; focal: boolean; total: boolean; delta?: string; to: string; label: string;
+}) {
   const zero = cell.valueCents === 0;
-  return (
-    <div className={`${styles.cell} ${total ? styles.cellTotal : ''} ${focal ? styles.cellFocal : ''}`}>
+  const className = `${styles.cell} ${total ? styles.cellTotal : ''} ${focal ? styles.cellFocal : ''}`;
+  const content = (
+    <>
       <div className={`${styles.value} ${zero ? styles.dash : ''} ${cell.valueCents < 0 ? styles.refund : ''}`}>
         {zero ? '–' : formatCents(cell.valueCents)}
       </div>
       {delta !== undefined && <div className={styles.delta}>{delta}</div>}
-    </div>
+    </>
   );
+  if (zero) return <div className={className}>{content}</div>;
+  return <Link className={`${className} ${styles.cellLink}`} to={to} aria-label={label}>{content}</Link>;
 }

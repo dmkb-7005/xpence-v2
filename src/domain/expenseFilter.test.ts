@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  activeFilterCount, EMPTY_FILTER, groupByMonth, makeMatcher, monthHeader, normalizeText, presetRange,
+  activeFilterCount, EMPTY_FILTER, expensesLink, filterFromParams, groupByMonth, rangeLabel, makeMatcher, monthHeader, normalizeText, presetRange,
 } from './expenseFilter';
 
 const today = '2026-11-10';
@@ -64,5 +64,33 @@ describe('groupByMonth', () => {
 
   it('formats month headers', () => {
     expect(monthHeader('2026-10')).toBe('OCTOBER 2026');
+  });
+});
+
+describe('links into Expenses', () => {
+  it('builds and reads a type + month link', () => {
+    const link = expensesLink({ month: '2026-10', typeId: '16' });
+    expect(link).toBe('/expenses?month=2026-10&type=16');
+    const f = filterFromParams(new URLSearchParams(link.split('?')[1]));
+    expect(f).toEqual({ ...EMPTY_FILTER, range: { from: '2026-10-01', to: '2026-10-31' }, typeIds: ['16'] });
+  });
+  it('month only, February clamped', () => {
+    expect(filterFromParams(new URLSearchParams('month=2028-02'))?.range).toEqual({ from: '2028-02-01', to: '2028-02-29' });
+    expect(filterFromParams(new URLSearchParams('month=2028-02'))?.typeIds).toEqual([]);
+  });
+  it('keeps the Home preset link', () => {
+    expect(filterFromParams(new URLSearchParams('range=this-month'))?.preset).toBe('this-month');
+  });
+  it('ignores missing or malformed params', () => {
+    expect(filterFromParams(new URLSearchParams(''))).toBeNull();
+    expect(filterFromParams(new URLSearchParams('month=2026-13'))).toBeNull();
+    expect(filterFromParams(new URLSearchParams('range=forever'))).toBeNull();
+  });
+});
+
+describe('rangeLabel', () => {
+  it('names a whole month, otherwise shows the days', () => {
+    expect(rangeLabel({ from: '2026-10-01', to: '2026-10-31' })).toBe('Oct 2026');
+    expect(rangeLabel({ from: '2026-10-05', to: '2026-10-20' })).toBe('05-10 – 20-10');
   });
 });

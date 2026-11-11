@@ -22,6 +22,7 @@ Rules:
 - An item with usage above 0 cannot be deleted, only hidden. Hidden items stay resolvable on old rows.
 - Names are unique per list, compared ignoring case and accents.
 - Repeat of N months: N extra rows, day-of-month clamped to the month's last day (31 Jan → 28/29 Feb → 31 Mar), all sharing a new `seriesId`.
+- **Later rows** of a series are those with the same `seriesId` and a date after the stored date of the row being edited. "This and later" edits copy `amountCents`, `expenseTypeId`, `groupId`, `colorId` and `note` to them in one transaction, keeping their dates; deletes remove them together. Legacy rows have no `seriesId` and are always edited alone.
 
 ## Money and amount expressions
 
@@ -45,6 +46,10 @@ With `today` on day `d`:
 - `projected = spentToDate + max(expectedRemaining, scheduled)`. Usual spending already contains recurring charges, so scheduled rows are not added on top.
 - **State**: `over` when `spentToDate > upper`; `trending over` when `projected > upper`; otherwise `on track`.
 - **Range bar scale**: `ceil(upper × 1.15 / €500) × €500`. The median label is hidden when it would overlap another label.
+
+### Types above usual (Home)
+
+For each type with spend this month up to today: `over = spentToDate_type − usualToDate_type`, where `usualToDate_type` is the median over the window months of that type's spend up to the same day of the month (months without spend count as zero, so a type never seen in the window has usual 0). Types with `over > 0` are listed, largest first, at most three. Scheduled rows later this month are not counted. Shown only when the month's state is *trending over* or *over*, and only with a full window.
 
 ### Tone rule (Budgets cells and Home's last month)
 
