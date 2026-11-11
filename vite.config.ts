@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['icons/apple-touch-icon.png'],
+      includeAssets: ['icons/apple-touch-icon.png', 'icons/icon.svg', 'icons/favicon-32.png'],
       manifest: {
         name: 'Xpence',
         short_name: 'Xpence',
@@ -21,8 +21,9 @@ export default defineConfig({
         background_color: '#1a1f2b',
         theme_color: '#1a1f2b',
         icons: [
-          { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'icons/icon-maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
           { src: 'icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
         shortcuts: [
@@ -30,7 +31,10 @@ export default defineConfig({
             name: 'Add expense',
             short_name: 'Add',
             url: './#/expenses/new',
-            icons: [{ src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+            icons: [
+              { src: 'icons/shortcut-add-96.png', sizes: '96x96', type: 'image/png' },
+              { src: 'icons/shortcut-add-192.png', sizes: '192x192', type: 'image/png' },
+            ],
           },
         ],
       },

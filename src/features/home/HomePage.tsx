@@ -10,10 +10,11 @@ import { db } from '../../db/db';
 import { useSettings, type Settings } from '../../db/hooks';
 import { addMonthsToKey, formatChipDate, monthKeyOf, todayIso } from '../../domain/dates';
 import { monthName } from '../../domain/expenseFilter';
+import { toneFor } from '../../domain/budgets';
 import { formatEuroShort, rangeBar } from '../../domain/homeBar';
 import { formatCents } from '../../domain/money';
 import {
-  assessMonth, computePace, firstMonthOf, MIN_USUAL_MONTHS, windowFor, type Dated, type Pace,
+  assessMonth, computePace, firstMonthOf, windowFor, type Dated, type Pace,
 } from '../../domain/usual';
 import styles from './Home.module.css';
 
@@ -170,15 +171,15 @@ function PaceCard({ pace, size, month }: { pace: Pace; size: number; month: stri
 }
 
 function NoHistoryCard({ expenses, month, size }: { expenses: readonly Dated[]; month: string; size: number }) {
-  const complete = Math.min(MIN_USUAL_MONTHS, windowFor(month, size, firstMonthOf(expenses)).length);
+  const complete = windowFor(month, size, firstMonthOf(expenses)).length;
   return (
     <section className={`${styles.card} ${styles.cardFirst}`} aria-label="Usual range">
       <span className={`${styles.badge} ${styles.badgeMuted}`}><InfoIcon />Not enough history</span>
       <p className={styles.history}>
-        Your usual range and the month-end projection appear after {MIN_USUAL_MONTHS} complete months. <b>{complete} of {MIN_USUAL_MONTHS}</b> so far.
+        Your usual range and the month-end projection appear after {size} complete months. <b>{complete} of {size}</b> so far.
       </p>
-      <div className={styles.progress} aria-hidden="true">
-        {Array.from({ length: MIN_USUAL_MONTHS }, (_, i) => <span key={i} className={i < complete ? styles.done : ''} />)}
+      <div className={styles.progress} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }} aria-hidden="true">
+        {Array.from({ length: size }, (_, i) => <span key={i} className={i < complete ? styles.done : ''} />)}
       </div>
     </section>
   );
@@ -186,7 +187,8 @@ function NoHistoryCard({ expenses, month, size }: { expenses: readonly Dated[]; 
 
 function LastMonthCard({ expenses, month, size }: { expenses: readonly Dated[]; month: string; size: number }) {
   const { total, usual, aboveUsual } = assessMonth(expenses, month, size);
-  const below = usual !== null && total < usual.lower;
+  // same rule as the Budgets screen: green only when the month was clearly below usual
+  const below = toneFor(total, usual, 'past') === 'below';
   let badge = null;
   if (aboveUsual) badge = <span className={`${styles.badge} ${styles.badgeOver}`}><ArrowUpIcon size={14} strokeWidth={2.4} />Above usual</span>;
   else if (below) badge = <span className={`${styles.badge} ${styles.badgeBelow}`}><ArrowDownIcon />Below usual</span>;
