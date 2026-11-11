@@ -59,7 +59,7 @@ export const backupSchema = z
   })
   .superRefine((b, ctx) => {
     const issue = (message: string, path: (string | number)[]) =>
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message, path });
+      ctx.addIssue({ code: 'custom', message, path });
 
     const idsOf = (name: string, rows: readonly { id: string }[]) => {
       const seen = new Set<string>();
@@ -96,7 +96,7 @@ export function parseBackup(raw: unknown): ParseBackupResult {
   }
   const result = backupSchema.safeParse(raw);
   if (result.success) return { ok: true, backup: result.data };
-  return { ok: false, errors: result.error.issues.slice(0, 20).map(describeIssue) };
+  return { ok: false, errors: result.error.issues.slice(0, 20).map((issue) => describeIssue(issue, raw)) };
 }
 
 const TABLE_LABEL: Record<string, string> = {
@@ -107,19 +107,34 @@ const FIELD_LABEL: Record<string, string> = {
   hex: 'colour value', note: 'remark', isDividend: 'dividend flag', isStockSale: 'stock sale flag',
 };
 
+type Issue = z.ZodError['issues'][number];
+
+/** The value at an issue's path in the original input (undefined when it is absent). */
+function valueAt(raw: unknown, path: readonly PropertyKey[]): unknown {
+  let v: unknown = raw;
+  for (const key of path) {
+    if (typeof v !== 'object' || v === null) return undefined;
+    v = (v as Record<PropertyKey, unknown>)[key];
+  }
+  return v;
+}
+
 /** Readable restore errors: `Expense row 1.204: amount should be a number`. */
-export function describeIssue(issue: z.ZodIssue): string {
-  const [table, index, field] = issue.path;
-  if (issue.path.length === 1 && typeof table === 'string' && issue.code === 'invalid_type' && issue.received === 'undefined') {
+export function describeIssue(issue: Issue, raw: unknown): string {
+  const path = issue.path as readonly PropertyKey[];
+  const [table, index, field] = path;
+  const missing = valueAt(raw, path) === undefined;
+  if (path.length === 1 && typeof table === 'string' && issue.code === 'invalid_type' && missing) {
     return `Not an Xpence backup: missing "${table}" table`;
   }
   if (typeof table === 'string' && typeof index === 'number') {
     const where = `${TABLE_LABEL[table] ?? table} row ${(index + 1).toLocaleString('de-DE')}`;
     const what = typeof field === 'string' ? FIELD_LABEL[field] ?? field : null;
     if (issue.code === 'invalid_type') {
-      return what ? `${where}: ${what} ${issue.received === 'undefined' ? 'is missing' : `should be a ${issue.expected}`}` : `${where}: invalid entry`;
+      const expected = 'expected' in issue ? String(issue.expected) : 'different value';
+      return what ? `${where}: ${what} ${missing ? 'is missing' : `should be a ${expected}`}` : `${where}: invalid entry`;
     }
     return what ? `${where}: ${what} ${issue.message}` : `${where}: ${issue.message}`;
   }
-  return `${issue.path.join('.') || 'File'}: ${issue.message}`;
+  return `${path.map(String).join('.') || 'File'}: ${issue.message}`;
 }
