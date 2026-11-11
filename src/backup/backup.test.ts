@@ -36,6 +36,21 @@ describe('parseBackup', () => {
     expect(!result.ok && result.errors.length).toBe(3);
   });
 
+  it('describes errors in plain words', () => {
+    const raw = clone();
+    raw.expenses[1].amountCents = '12.50';
+    raw.expenses[0].expenseTypeId = '42';
+    delete raw.incomes;
+    const result = parseBackup(raw);
+    const errors = result.ok ? [] : result.errors;
+    expect(errors.includes('Not an Xpence backup: missing "incomes" table')).toBe(true);
+    expect(errors.includes('Expense row 2: amount should be a number')).toBe(true);
+    const refs = clone();
+    refs.expenses[0].expenseTypeId = '42';
+    const r2 = parseBackup(refs);
+    expect(!r2.ok && r2.errors[0]).toBe('Expense row 1: type id 42 does not exist');
+  });
+
   it('rejects duplicate ids, bad dates, fractional cents and a double-flagged income', () => {
     const dup = clone();
     dup.expenses[1].id = '10';

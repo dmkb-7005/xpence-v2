@@ -69,3 +69,12 @@ export const InfoIcon = ({ size = 15, ...r }: P) => <svg {...base(size, r)}><cir
 export const RestoreIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></svg>;
 export const FilterIcon = ({ size = 20, ...r }: P) => <svg {...base(size, { strokeWidth: 2.2, ...r })}><path d="M4 6h16M7 12h10M10 18h4" /></svg>;
 export const SearchIcon = ({ size = 18, ...r }: P) => <svg {...base(size, r)}><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>;
+export const UploadIcon = ({ size = 18, ...r }: P) => (
+  <svg {...base(size, r)}><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>
+);
+export const FolderIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>;
+export const PaletteIcon = ({ size = 20, ...r }: P) => (
+  <svg {...base(size, r)}><circle cx="12" cy="12" r="9" /><circle cx="8" cy="10" r="1.2" /><circle cx="12" cy="7.5" r="1.2" /><circle cx="16" cy="10" r="1.2" /></svg>
+);
+export const FileIcon = ({ size = 20, ...r }: P) => <svg {...base(size, r)}><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>;
+export const DownloadIcon = ({ size = 16, ...r }: P) => <svg {...base(size, r)}><path d="M12 4v12M7 11l5 5 5-5" /><path d="M5 20h14" /></svg>;

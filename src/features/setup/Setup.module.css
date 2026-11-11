@@ -1,0 +1,98 @@
+.screen { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.header { display: flex; align-items: center; gap: 4px; height: 56px; padding: 24px 16px 0; flex: none; }
+.headerSub { padding-left: 8px; padding-right: 12px; }
+.title { flex: 1; margin: 0; font-size: 22px; font-weight: 600; }
+.back {
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  color: var(--text); background: transparent; border: 0; border-radius: 22px;
+}
+.addPill {
+  height: 40px; padding: 0 16px 0 12px; display: flex; align-items: center; gap: 6px;
+  color: var(--on-accent); font-size: 14px; font-weight: 600; background: var(--accent); border: 0; border-radius: 20px;
+}
+.scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 0 24px; overscroll-behavior: contain; }
+.label { margin: 0 20px 6px; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0.6px; }
+.card {
+  margin: 0 16px 12px; padding: 16px;
+  background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+.cardWarn { border-color: rgba(242, 179, 75, 0.4); }
+.cardDanger { border-color: var(--danger-border); }
+.listCard { padding: 4px 12px; }
+.intro { margin: 0 20px 10px; color: var(--muted); font-size: 13px; line-height: 18px; }
+
+/* backup */
+.status { display: flex; gap: 12px; align-items: center; }
+.statusIcon { width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 22px; }
+.iconOk { color: var(--accent); background: var(--info-bg); }
+.iconWarn { color: var(--warn); background: var(--warn-bg); }
+.iconDanger { color: var(--danger); background: var(--danger-badge-bg); }
+.statusTitle { font-size: 16px; font-weight: 600; }
+.statusWarn { color: var(--warn); }
+.statusDanger { color: var(--danger); }
+.statusSub { margin-top: 2px; color: var(--text-2); font-size: 13px; }
+.primary {
+  width: 100%; height: 56px; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  color: var(--on-accent); font-size: 16px; font-weight: 600; background: var(--accent); border: 0; border-radius: 28px;
+}
+.primary:disabled { color: var(--faint); background: var(--disabled-bg); }
+.pair { display: flex; gap: 6px; margin-top: 6px; }
+.secondary {
+  flex: 1; height: 44px; padding: 0 12px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  color: var(--text); font-size: 14px; font-weight: 600; background: var(--surface-2); border: 0; border-radius: 22px; white-space: nowrap;
+}
+.hint { margin-top: 10px; color: var(--muted); font-size: 12px; line-height: 16px; }
+
+/* list rows */
+.link {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 0 4px;
+  color: var(--text); font-size: 15px; text-align: left; text-decoration: none;
+  background: transparent; border: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.link:last-child { border-bottom: 0; }
+.linkIcon { width: 32px; display: flex; justify-content: center; color: var(--muted); }
+.linkName { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.count { color: var(--muted); font-family: var(--font-num); font-size: 14px; }
+.chev { color: var(--faint); flex: none; }
+.dots { display: flex; margin-right: 6px; }
+.dots span { width: 12px; height: 12px; margin-left: -3px; border-radius: 6px; box-shadow: 0 0 0 2px var(--surface); }
+
+/* settings */
+.settingTitle { font-size: 15px; font-weight: 500; }
+.settingText { margin-top: 2px; color: var(--muted); font-size: 13px; line-height: 18px; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.choice { height: 44px; color: var(--text); font-size: 14px; background: var(--surface-2); border: 0; border-radius: 22px; }
+.choice[aria-pressed='true'] { color: var(--on-accent); font-weight: 600; background: var(--accent); }
+.divider { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--glass-border); }
+.stepper { display: flex; align-items: center; gap: 4px; flex: none; }
+.step { width: 44px; height: 44px; color: var(--text); font-size: 20px; background: var(--surface-2); border: 0; border-radius: 22px; }
+.step:disabled { opacity: 0.4; }
+.stepValue { min-width: 54px; text-align: center; font-family: var(--font-num); font-size: 16px; font-weight: 600; }
+
+/* storage */
+.stat { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+.stat span:first-child { color: var(--text-2); }
+.stat span:last-child { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.note {
+  display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; padding: 10px 12px;
+  color: var(--text-2); font-size: 13px; line-height: 18px; background: var(--info-bg); border-radius: 14px;
+}
+.note svg { flex: none; margin-top: 1px; color: var(--accent); }
+.noteWarn { color: var(--text); background: var(--warn-bg); border: 1px solid rgba(242, 179, 75, 0.33); }
+.noteWarn svg { color: var(--warn); }
+.noteWarn b { color: var(--warn); font-weight: 600; }
+.noteButton {
+  width: 100%; height: 44px; margin-top: 10px; color: var(--text); font-size: 14px; font-weight: 600;
+  background: var(--surface-2); border: 0; border-radius: 22px;
+}
+.version { margin-top: 12px; color: var(--muted); font-size: 12px; text-align: center; }
+
+/* lookup rows */
+.itemName { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; overflow: hidden; }
+.itemName > span:first-child { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hidden { color: var(--faint); }
+.hiddenBadge { height: 20px; padding: 0 8px; display: inline-flex; align-items: center; flex: none; color: var(--text-2); font-size: 11px; font-weight: 600; background: var(--surface-2); border-radius: 10px; }
+.usage { flex: none; color: var(--muted); font-size: 12px; }
+.swatchDot { width: 20px; height: 20px; flex: none; border-radius: 10px; }
+.hex { color: var(--muted); font-family: var(--font-num); font-size: 11px; }

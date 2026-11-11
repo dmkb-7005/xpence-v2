@@ -7,7 +7,7 @@ const TABS = [
   { to: '/expenses', label: 'Expenses', icon: ListIcon, end: true },
   { to: '/budgets', label: 'Budgets', icon: PieIcon, end: true },
   { to: '/income', label: 'Income', icon: ArrowUpIcon, end: true },
-  { to: '/setup', label: 'Setup', icon: GearIcon, end: true },
+  { to: '/setup', label: 'Setup', icon: GearIcon, end: false },
 ] as const;
 
 /** Height of the navigation bar without the safe area (6 + 64 + 14). */

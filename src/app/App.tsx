@@ -6,6 +6,7 @@ import { BudgetsPage } from '../features/budgets/BudgetsPage';
 import { IncomePage } from '../features/income/IncomePage';
 import { IncomeFormPage } from '../features/income/IncomeFormPage';
 import { SetupPage } from '../features/setup/SetupPage';
+import { LookupListPage } from '../features/setup/LookupListPage';
 import { SnackbarProvider } from '../components/Snackbar';
 import { TabLayout } from './TabLayout';
 import { UpdateBanner } from './UpdateBanner';
@@ -22,6 +23,9 @@ export function App() {
             <Route path="/budgets" element={<BudgetsPage />} />
             <Route path="/income" element={<IncomePage />} />
             <Route path="/setup" element={<SetupPage />} />
+            <Route path="/setup/types" element={<LookupListPage kind="types" />} />
+            <Route path="/setup/groups" element={<LookupListPage kind="groups" />} />
+            <Route path="/setup/colours" element={<LookupListPage kind="colours" />} />
           </Route>
           <Route path="/expenses/new" element={<ExpenseFormPage />} />
           <Route path="/expenses/:id" element={<ExpenseFormPage />} />
